@@ -54,7 +54,7 @@ function LayoutContent({ children }: { children: React.ReactNode }) {
       const refreshToken = localStorage.getItem("refreshToken");
 
       if (!accessToken || !refreshToken) {
-        toast.warning("No active session found.");
+        toast.warning("未找到活跃会话。");
         return;
       }
 
@@ -75,15 +75,15 @@ function LayoutContent({ children }: { children: React.ReactNode }) {
         localStorage.removeItem("refreshToken");
         localStorage.removeItem("isLoggedIn");
         setIsLoggedIn(false);
-        toast.success("Logged out successfully!");
-        router.push("/");
+        toast.success("已成功退出登录！");
+        window.location.href = "/";
       } else {
         const errorData = await response.data
-        toast.error(errorData.message || "Failed to log out.");
+        toast.error(errorData.message || "退出登录失败。");
       }
     } catch (error) {
       console.error("Error during logout:", error);
-      toast.error("An error occurred while logging out.");
+      toast.error("退出登录时发生错误。");
     }
   };
 
@@ -93,28 +93,11 @@ function LayoutContent({ children }: { children: React.ReactNode }) {
         <header className="sticky top-0 z-40 border-b bg-background">
           <div className="container flex h-16 items-center justify-between py-4">
             <div className="flex items-center gap-2">
-              <Link href="/" className="flex items-center gap-2">
-              <img src={logo.src} className="h-6 w-6 ml-5"></img>
-                <span className="text-xl font-bold">Notecraft</span>
-              </Link>
             </div>
             <nav className="flex gap-6"></nav>
-            {!isLoggedIn && (
-              <div className="flex items-center gap-4">
-                <Link
-                  href="/login"
-                  className="text-sm font-medium transition-colors hover:text-primary"
-                >
-                  Log in
-                </Link>
-                <Button asChild>
-                  <Link href="/signup">Sign up</Link>
-                </Button>
-              </div>
-            )}
             {isLoggedIn && (
               <div className="flex items-center gap-4">
-                <Button onClick={handleLogout}>Logout</Button>
+                <Button onClick={handleLogout}>退出登录</Button>
               </div>
             )}
           </div>
