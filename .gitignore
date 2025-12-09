@@ -1,0 +1,7 @@
+.vscode
+__pycache__/
+.VENV/
+.env
+.papers
+.zed/
+.ropeproject/
