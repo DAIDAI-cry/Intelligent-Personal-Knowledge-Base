@@ -1,0 +1,12 @@
+# backend/Dockerfile.celery
+FROM python:3.11-slim
+
+WORKDIR /app
+
+COPY requirements.txt .
+RUN pip install --upgrade pip setuptools wheel \
+    && pip install --no-cache-dir -r requirements.txt
+
+COPY . .
+
+CMD ["sh", "-c", "celery -A NoteCraft_backend worker --loglevel=info & uvicorn NoteCraft_backend.keepalive:app --host 0.0.0.0 --port 9999"]
