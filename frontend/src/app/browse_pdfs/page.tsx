@@ -50,6 +50,28 @@ const DocumentsPage = () => {
     setLoading(false);
   };
 
+  const handleDownload = (e: React.MouseEvent<HTMLAnchorElement, MouseEvent>, doc: Document) => {
+    // 目前仅作为占位符以修复编译错误
+    // 如果需要特定下载逻辑（如在新标签页打开或强制下载），可以在此处添加
+    console.log("Opening document:", doc.topic);
+  };
+
+  const handleDelete = async (e: React.MouseEvent<HTMLButtonElement>, docId: string) => {
+    e.preventDefault();
+    e.stopPropagation();
+
+    if (!confirm("Are you sure you want to delete this document?")) return;
+
+    try {
+      await axios.delete(`http://localhost:8000/delete_pdf/${docId}/`);
+      toast.success("Document deleted successfully");
+      setDocuments(documents.filter((doc) => doc.id !== docId));
+    } catch (err) {
+      console.error("Error deleting document:", err);
+      toast.error("Failed to delete document");
+    }
+  };
+
   return (
     <div className="min-h-screen p-6 p-6 flex flex-col items-center">
       <h1 className="text-3xl font-bold text-center mb-6">Search Documents</h1>

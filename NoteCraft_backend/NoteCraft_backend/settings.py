@@ -138,9 +138,13 @@ DATABASES = {
 # If DB_URL is provided in the environment, use dj_database_url to parse it. Otherwise
 # fall back to the local sqlite file `db.sqlite3` for development.
 db_url = os.getenv('DB_URL')
+print(f"DEBUG: DB_URL from env is: '{db_url}'") # Debug print
+
 if db_url:
+    db_config = dj_database_url.config(default=db_url, conn_max_age=600)
+    print(f"DEBUG: Parsed DB config: {db_config}") # Debug print
     DATABASES = {
-        'default': dj_database_url.config(default=db_url, conn_max_age=600)
+        'default': db_config
     }
 else:
     DATABASES = {
