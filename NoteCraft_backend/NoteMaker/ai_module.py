@@ -8,8 +8,8 @@ from langchain_text_splitters import RecursiveCharacterTextSplitter
 from langchain_openai import ChatOpenAI
 from pinecone import Pinecone
 from django.conf import settings
-from langchain.schema import HumanMessage, SystemMessage
-
+#from langchain.schema import HumanMessage, SystemMessage
+from langchain_core.messages import HumanMessage, SystemMessage
 load_dotenv()
 
 # Initialize Pinecone
