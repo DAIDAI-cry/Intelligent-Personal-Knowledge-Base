@@ -72,9 +72,22 @@ export const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose, onSuccess
           setFormData({ username: "", password: "", confirmPassword: "" });
         }
       }
-    } catch (error) {
+    } catch (error: any) {
       console.error(error);
-      toast.error(isLogin ? "登录失败" : "注册失败");
+      let errorMessage = isLogin ? "登录失败" : "注册失败";
+
+      if (axios.isAxiosError(error) && error.response?.data) {
+        const data = error.response.data;
+        // 尝试提取后端返回的具体错误信息
+        // Django 通常返回格式: { "password": ["密码太短..."], "username": ["已存在..."] }
+        if (typeof data === "object" && data !== null) {
+          const messages = Object.values(data).flat();
+          if (messages.length > 0 && typeof messages[0] === "string") {
+            errorMessage = messages[0] as string;
+          }
+        }
+      }
+      toast.error(errorMessage);
     }
   };
 
@@ -127,6 +140,8 @@ export const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose, onSuccess
                   className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-lg focus:outline-none focus:border-blue-500/50 text-white placeholder-gray-500 transition-colors"
                 />
               </div>
+              
+
               {!isLogin && (
                 <motion.div
                   initial={{ height: 0, opacity: 0 }}
@@ -141,6 +156,17 @@ export const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose, onSuccess
                     className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-lg focus:outline-none focus:border-blue-500/50 text-white placeholder-gray-500 transition-colors"
                   />
                 </motion.div>
+              )}
+
+              {!isLogin && (
+                <div className="text-xs text-gray-400 px-1">
+                  <p className="mb-1 text-blue-300/80">密码要求：</p>
+                  <ul className="list-disc list-inside space-y-0.5 text-gray-500 pl-1">
+                    <li>密码长度至少 8 位</li>
+                    <li>密码不能仅包含数字</li>
+                    <li>密码不能过于简单</li>
+                  </ul>
+                </div>
               )}
 
               <button
