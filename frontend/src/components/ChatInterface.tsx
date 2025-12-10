@@ -94,14 +94,14 @@ export default function ChatInterface() {
             {messages.map((message) => (
               <div
                 key={message.id}
-                className={`flex gap-4 ${
+                className={`flex gap-4 items-center ${
                   message.role === "user" ? "justify-end" : "justify-start"
                 }`}
               >
                 {message.role === "assistant" && (
-                  <Avatar className="w-8 h-8 border border-gray-200 bg-white shrink-0">
+                  <Avatar className="w-18 h-18 border border-gray-200 bg-white shrink-0">
                     <AvatarImage src="/images/penguin.png" alt="AI" />
-                    <AvatarFallback>AI</AvatarFallback>
+                    {/* <AvatarFallback>AI</AvatarFallback> */}
                   </Avatar>
                 )}
                 
@@ -116,7 +116,7 @@ export default function ChatInterface() {
                 </div>
 
                 {message.role === "user" && (
-                   <Avatar className="w-8 h-8 border border-gray-200 bg-gray-100 shrink-0">
+                   <Avatar className="w-18 h-18 border border-gray-200 bg-gray-100 shrink-0">
                       <AvatarFallback><User size={16}/></AvatarFallback>
                    </Avatar>
                 )}
@@ -124,9 +124,9 @@ export default function ChatInterface() {
             ))}
             {isLoading && (
               <div className="flex gap-4 justify-start">
-                 <Avatar className="w-8 h-8 border border-gray-200 bg-white shrink-0">
+                 <Avatar className="w-18 h-18 border border-gray-200 bg-white shrink-0">
                     <AvatarImage src="/images/penguin.png" alt="AI" />
-                    <AvatarFallback>AI</AvatarFallback>
+                    {/* <AvatarFallback>AI</AvatarFallback> */}
                   </Avatar>
                   <div className="bg-gray-100 px-4 py-3 rounded-2xl rounded-bl-sm flex items-center">
                     <div className="flex space-x-1">
