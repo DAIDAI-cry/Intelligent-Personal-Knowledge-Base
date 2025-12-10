@@ -25,9 +25,9 @@ class GenerateNoteView(APIView):
         if not query:
             return Response({"error": "query parameter is required"}, status=400)
 
-        prompt_1 = query + topics_query
-
-        task = generate_notes_task.delay(prompt_1)
+        # prompt_1 = query + topics_query
+        # 直接传递原始 query，在 task 内部再拼接 topics_query
+        task = generate_notes_task.delay(query)
         return Response({"message": "Note generation started", "task_id": task.id})
 
 class TaskStatusView(APIView):

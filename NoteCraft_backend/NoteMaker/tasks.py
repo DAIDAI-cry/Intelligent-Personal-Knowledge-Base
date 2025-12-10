@@ -1,32 +1,74 @@
 # tasks.py
 import json
-from .myutils import get_context, google_search_image, request_OpenRouter
+from .myutils import get_context, google_search_image, request_OpenRouter, topics_query
 from celery import shared_task
 
 @shared_task
-def generate_notes_task(prompt_1:str) -> dict:
+def generate_notes_task(user_query:str) -> dict:
     try:
-        response_1 = request_OpenRouter(prompt_1)
-        # Extract JSON
-        start = response_1.find("```json") + len("```json")
-        end = response_1.find("```", start)
-        json_str = response_1[start:end].strip()
-        fresponse = json.loads(json_str)
+        # Step 1: Generate topics/keywords for RAG (using the complex prompt)
+        step1_prompt = user_query + topics_query
+        response_1 = request_OpenRouter(step1_prompt)
         
-        context = get_context(prompt_1, namespace=fresponse['namespace'])
+        # Attempt to extract JSON, fallback if fails
+        try:
+            start = response_1.find("```json")
+            if start != -1:
+                start += len("```json")
+                end = response_1.find("```", start)
+                json_str = response_1[start:end].strip()
+                fresponse = json.loads(json_str)
+                namespace = fresponse.get('namespace', 'game_mechanics')
+                topics = fresponse.get('topics', user_query)
+            else:
+                # Try to find raw JSON object
+                start = response_1.find("{")
+                end = response_1.rfind("}") + 1
+                if start != -1 and end > start:
+                    json_str = response_1[start:end].strip()
+                    fresponse = json.loads(json_str)
+                    namespace = fresponse.get('namespace', 'game_mechanics')
+                    topics = fresponse.get('topics', user_query)
+                else:
+                    raise ValueError("No JSON found")
+        except Exception:
+            # Fallback if JSON parsing fails
+            namespace = 'game_mechanics'
+            topics = user_query
+        
+        # Step 2: Retrieve context
+        context = get_context(user_query, namespace=namespace)
 
-        prompt_2:str= "Objective: Act as an expert Challenger-rank Teamfight Tactics (Golden Spatula) coach. " \
-        f"Generate comprehensive, strategic guides on {fresponse['topics']} based on the provided context. If context is irrelevant, ignore it.\
-        InstructionsStructure: Organize notes hierarchically with headings (e.g., Early Game, Mid Game, Itemization, Positioning). Keep the content detailed and actionable.\
-        Focus on winning conditions, counters, and specific details. Do not add double new line or meta text ever.\
-        to include images write &&&image:(description of image)&&& at the place where you want to add the image this should be done in between the text\
-        example- &&&image:(TFT Kai'Sa positioning)&&& use 2-3 images per heading at max\
-        output should be in ```markdown box keep the markup syntax the notes should have plenty text \
-        examples where applicable.Context: {context}"
+        # Step 3: Generate final response (using ONLY the user's original query)
+        prompt_2:str= f"""
+        Role: You are an expert Challenger-rank Teamfight Tactics (Golden Spatula) coach and assistant.
+        
+        User Input: "{user_query}"
+        
+        Context (from knowledge base): {context}
+        
+        Instructions:
+        1. Respond to the User Input directly and conversationally.
+        2. If the user asks for a guide, strategy, or specific game details, use the Context to provide a comprehensive answer.
+        3. If the User Input is simple (e.g., "1", "hi", "hello"), respond politely and ask how you can help with Teamfight Tactics.
+        4. Do NOT generate a full strategic guide unless the user explicitly asks for one.
+        5. You can use Markdown for formatting (bold, lists, headers) to make the response readable.
+        6. To include images, write &&&image:(description of image)&&&. Use this only if relevant to explain a visual concept (like positioning).
+        7. Keep the response language consistent with the user's input (Chinese if Chinese, English if English).
+        """
+        
         notes = request_OpenRouter(prompt_2)
-        start = notes.find("```markdown") + len("```markdown")
-        end = notes.find("```", start)
-        notes = notes[start:end].strip()
+        
+        start = notes.find("```markdown")
+        if start != -1:
+            start += len("```markdown")
+            end = notes.find("```", start)
+            if end != -1:
+                notes = notes[start:end].strip()
+            else:
+                notes = notes[start:].strip()
+        else:
+            notes = notes.strip()
 
         arr = notes.split("&&&")
         processed_notes = []

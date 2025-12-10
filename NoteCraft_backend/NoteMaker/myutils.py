@@ -37,27 +37,40 @@ topics_query:str="Generate key gameplay aspects for Teamfight Tactics (Golden Sp
     "namespace list-compositions,items,champions,traits,augments,economy_leveling,positioning,patch_notes,game_mechanics"
 
 def request_OpenRouter(query:str)->str:
+    if not OR_API_KEY or OR_API_KEY == "your_openrouter_api_key":
+        raise Exception("API Key 未配置。请在 .env 文件中设置 OPEN_ROUTER_API_KEY。")
+
+    # 使用 SiliconCloud (硅基流动) API
+    # 文档: https://docs.siliconflow.cn/
     response = requests.post(
-        url="https://openrouter.ai/api/v1/chat/completions",
+        url="https://api.siliconflow.cn/v1/chat/completions",
         headers={
             "Authorization": f"Bearer {OR_API_KEY}",
             "Content-Type": "application/json",
         },
         data=json.dumps({
-            "model": "qwen/qwq-32b:free",
+            # 这里使用 Qwen2.5-7B-Instruct，它是免费且强大的模型
+            # 如果你想用更强的模型，可以换成 "Qwen/Qwen2.5-72B-Instruct" (可能收费)
+            # 或者 "deepseek-ai/DeepSeek-V3"
+            "model": "Qwen/Qwen2.5-7B-Instruct", 
             "messages": [
             {
                 "role": "user",
                 "content": f"{query}"
             }
             ],
-            "parameters": {
-        "language": "en"  # Specify language preference
-    }
-
+            "stream": False
         })
         )
-    return response.json()['choices'][0]['message']['content']
+    
+    if response.status_code != 200:
+        error_msg = f"OpenRouter API Error: {response.status_code} - {response.text}"
+        raise Exception(error_msg)
+
+    try:
+        return response.json()['choices'][0]['message']['content']
+    except (KeyError, json.JSONDecodeError) as e:
+        raise Exception(f"Invalid response from OpenRouter: {response.text}")
 
 
 

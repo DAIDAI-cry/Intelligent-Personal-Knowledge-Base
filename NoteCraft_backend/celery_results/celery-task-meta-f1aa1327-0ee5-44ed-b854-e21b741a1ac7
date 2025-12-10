@@ -1,0 +1,1 @@
+{"status": "SUCCESS", "result": {"success": false, "error": "OpenRouter API Error: 404 - {\"error\":{\"message\":\"No endpoints found for qwen/qwq-32b:free.\",\"code\":404},\"user_id\":\"user_36ewcj2bI2Te2oCrVvlQQ8LNkQr\"}"}, "traceback": null, "children": [], "date_done": "2025-12-10T15:39:59.850636+00:00", "task_id": "f1aa1327-0ee5-44ed-b854-e21b741a1ac7"}

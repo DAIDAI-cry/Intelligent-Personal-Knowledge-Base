@@ -8,6 +8,9 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Send, Plus, User } from "lucide-react";
 import { motion } from "framer-motion";
 
+import axios from "axios";
+import { toast } from "sonner";
+
 interface Message {
   id: string;
   role: "user" | "assistant";
@@ -26,6 +29,48 @@ export default function ChatInterface() {
   const [isLoading, setIsLoading] = useState(false);
   const scrollAreaRef = useRef<HTMLDivElement>(null);
 
+  const pollTaskStatus = async (taskId: string) => {
+    const interval = setInterval(async () => {
+      try {
+        const res = await axios.get(`http://localhost:8000/task_status/${taskId}/`);
+        const status = res.data.status || res.data.state;
+
+        if (status === "done" || status === "SUCCESS") {
+          clearInterval(interval);
+          const result = res.data.result;
+          
+          let aiContent = "";
+          if (result && result.success && result.notes) {
+             aiContent = result.notes;
+          } else {
+             aiContent = result.error ? `错误: ${result.error}` : "抱歉，生成回答时出现了一些问题。";
+          }
+
+          const aiMessage: Message = {
+            id: Date.now().toString(),
+            role: "assistant",
+            content: aiContent,
+          };
+          setMessages((prev) => [...prev, aiMessage]);
+          setIsLoading(false);
+
+        } else if (status === "failed" || status === "error" || status === "FAILURE") {
+          clearInterval(interval);
+          toast.error("生成回答失败。");
+          setIsLoading(false);
+          setMessages((prev) => [...prev, {
+            id: Date.now().toString(),
+            role: "assistant",
+            content: "抱歉，我遇到了一些错误，无法回答您的问题。",
+          }]);
+        }
+      } catch (err) {
+        // 继续轮询，不立即报错，防止网络波动
+        console.error("Polling error:", err);
+      }
+    }, 2000); // 每2秒轮询一次
+  };
+
   const handleSend = async () => {
     if (!input.trim()) return;
 
@@ -39,16 +84,27 @@ export default function ChatInterface() {
     setInput("");
     setIsLoading(true);
 
-    // Simulate AI response (replace with actual API call later)
-    setTimeout(() => {
-      const aiMessage: Message = {
-        id: (Date.now() + 1).toString(),
-        role: "assistant",
-        content: "这是一个模拟的回复。在实际应用中，这里将连接到后端 API 获取关于金铲铲之战的智能回答。",
-      };
-      setMessages((prev) => [...prev, aiMessage]);
+    try {
+      // 调用后端生成笔记的接口
+      const response = await axios.post(
+        `http://localhost:8000/generate_note/`,
+        {
+          params: { query: userMessage.content },
+        }
+      );
+      
+      if (response.data && response.data.task_id) {
+        // 开始轮询任务状态
+        pollTaskStatus(response.data.task_id);
+      } else {
+        throw new Error("No task ID returned");
+      }
+
+    } catch (error) {
+      console.error("Error sending message:", error);
+      toast.error("发送消息失败，请重试。");
       setIsLoading(false);
-    }, 1000);
+    }
   };
 
   useEffect(() => {
