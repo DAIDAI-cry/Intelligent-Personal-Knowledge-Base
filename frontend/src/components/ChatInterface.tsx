@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Send, Plus, User, MessageSquare } from "lucide-react";
+import { Send, Plus, User, MessageSquare, Trash2 } from "lucide-react";
 import { motion } from "framer-motion";
 import { toast } from "sonner";
 
@@ -65,6 +65,29 @@ export default function ChatInterface() {
     }
   };
 
+  const deleteConversation = async (e: React.MouseEvent, id: number) => {
+    e.stopPropagation(); // 防止触发 loadConversation
+    if (!confirm("确定要删除这个对话吗？")) return;
+
+    try {
+      await axios.delete(`http://localhost:8000/conversations/${id}/`, {
+        headers: getAuthHeaders(),
+      });
+      
+      // 从列表中移除
+      setConversations((prev) => prev.filter((c) => c.id !== id));
+      
+      // 如果删除的是当前选中的对话，重置为新对话
+      if (conversationId === id) {
+        handleNewChat();
+      }
+      toast.success("对话已删除");
+    } catch (error) {
+      console.error("Failed to delete conversation:", error);
+      toast.error("删除失败");
+    }
+  };
+
   const handleNewChat = () => {
     setConversationId(null);
     setMessages([
@@ -113,10 +136,25 @@ export default function ChatInterface() {
       setMessages((prev) => [...prev, aiMessage]);
       
       if (!conversationId && response.data.conversation_id) {
-        setConversationId(response.data.conversation_id);
-        fetchConversations(); // Refresh list to show new chat
+        const newId = response.data.conversation_id;
+        console.log("New conversation created with ID:", newId); // Debug log
+        setConversationId(newId);
+        
+        // 立即在前端添加新对话到列表顶部
+        const newConv: Conversation = {
+          id: newId,
+          title: userMessage.content.slice(0, 20) + (userMessage.content.length > 20 ? "..." : "") || "新对话",
+          created_at: new Date().toISOString(),
+        };
+        
+        // 使用函数式更新确保基于最新状态
+        setConversations((prev) => {
+            // 防止重复添加
+            if (prev.some(c => c.id === newId)) return prev;
+            return [newConv, ...prev];
+        });
       }
-    } catch (error) {
+    } catch (error: any) {
       console.error("AI Error:", error);
       toast.error("AI 服务暂时不可用");
       const errorMessage: Message = {
@@ -125,6 +163,24 @@ export default function ChatInterface() {
         content: "抱歉，我现在无法连接到大脑，请稍后再试。",
       };
       setMessages((prev) => [...prev, errorMessage]);
+
+      // 即使请求失败，如果后端返回了 conversation_id，我们也应该更新列表
+      // Axios 的 error 对象中包含 response
+      if (error.response && error.response.data && error.response.data.conversation_id) {
+         const newId = error.response.data.conversation_id;
+         if (!conversationId) {
+            setConversationId(newId);
+            const newConv: Conversation = {
+                id: newId,
+                title: userMessage.content.slice(0, 20) + (userMessage.content.length > 20 ? "..." : "") || "新对话",
+                created_at: new Date().toISOString(),
+            };
+            setConversations((prev) => {
+                if (prev.some(c => c.id === newId)) return prev;
+                return [newConv, ...prev];
+            });
+         }
+      }
     } finally {
       setIsLoading(false);
     }
@@ -159,14 +215,26 @@ export default function ChatInterface() {
               <div
                 key={conv.id}
                 onClick={() => loadConversation(conv.id)}
-                className={`px-3 py-2 text-sm rounded-md cursor-pointer truncate flex items-center gap-2 ${
+                className={`group px-3 py-2 text-sm rounded-md cursor-pointer flex items-center justify-between gap-2 ${
                   conversationId === conv.id 
                     ? "bg-gray-200 text-gray-900 font-medium" 
                     : "text-gray-500 hover:bg-gray-100"
                 }`}
               >
-                <MessageSquare size={14} />
-                <span className="truncate">{conv.title}</span>
+                <div className="flex items-center gap-2 truncate overflow-hidden">
+                  <MessageSquare size={14} className="shrink-0"/>
+                  <span className="truncate">{conv.title}</span>
+                </div>
+                <div 
+                  role="button"
+                  className={`p-1 rounded-sm hover:bg-gray-300 hover:text-red-600 transition-all ${
+                    conversationId === conv.id ? "opacity-100" : "opacity-0 group-hover:opacity-100"
+                  }`}
+                  onClick={(e) => deleteConversation(e, conv.id)}
+                  title="删除对话"
+                >
+                  <Trash2 size={14} />
+                </div>
               </div>
             ))}
           </div>
