@@ -10,10 +10,18 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from bs4 import BeautifulSoup
+from pathlib import Path
+from dotenv import load_dotenv
 
 # ================= 配置区域 =================
+#修改为本地msedgedriver路径
 DRIVER_PATH = r"D:\Program Files(x86)\edgedriver_win64\msedgedriver.exe" 
 # ===========================================
+
+# 优先计算项目根目录以便保存到 datas/OriginData
+SCRIPT_DIR = Path(__file__).parent
+PROJECT_ROOT = SCRIPT_DIR.parent
+load_dotenv(PROJECT_ROOT / ".env")
 
 def extract_first_percentage(text):
     """
@@ -166,11 +174,15 @@ def scrape_opgg_to_json():
         "vectors": vectors_list
     }
 
-    output_filename = "opgg_tft_items.json"
-    with open(output_filename, "w", encoding="utf-8") as f:
+    # 保存到项目的 datas/OriginData 目录（参考 EmbedItemsScript 写法）
+    output_dir = PROJECT_ROOT / "datas" / "OriginData"
+    output_dir.mkdir(parents=True, exist_ok=True)
+    output_path = output_dir / "opgg_tft_items.json"
+
+    with open(output_path, "w", encoding="utf-8") as f:
         json.dump(final_data, f, ensure_ascii=False, indent=2)
     
-    print(f"\n成功！共抓取 {len(vectors_list)} 条数据，已保存至 {output_filename}")
+    print(f"\n成功！共抓取 {len(vectors_list)} 条数据，已保存至 {output_path}")
 
 if __name__ == "__main__":
     scrape_opgg_to_json()
