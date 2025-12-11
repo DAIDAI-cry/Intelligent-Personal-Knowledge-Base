@@ -15,7 +15,8 @@ OVERLAP_SIZE = 150
 
 # 路径配置
 SCRIPT_DIR = Path(__file__).parent
-PROJECT_ROOT = SCRIPT_DIR.parent
+# 修改：由于脚本在 scripts/Chunk-Embed-Upsert 下，需要向上两级才能找到项目根目录
+PROJECT_ROOT = SCRIPT_DIR.parent.parent
 INPUT_DIR = PROJECT_ROOT / "datas" / "OriginData"
 OUTPUT_DIR = PROJECT_ROOT / "datas" / "ChunkedData"
 

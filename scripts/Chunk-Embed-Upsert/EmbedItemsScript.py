@@ -8,7 +8,7 @@ from dotenv import load_dotenv
 # --- 配置部分 ---
 # 优先计算路径以加载 .env
 SCRIPT_DIR = Path(__file__).parent
-PROJECT_ROOT = SCRIPT_DIR.parent
+PROJECT_ROOT = SCRIPT_DIR.parent.parent
 load_dotenv(PROJECT_ROOT / ".env")
 
 # 从环境变量获取 API Key
