@@ -1,48 +1,60 @@
 import json
 import time
+import os
 from pathlib import Path
 from pinecone import Pinecone
+from dotenv import load_dotenv
 
 # --- 配置部分 ---
-# 请替换为你的 Pinecone API Key (与 Embed 脚本中使用的一致)
-PINECONE_API_KEY = "pcsk_57xrUh_7QgALbLdwRAG5YN7rSsCmum8AdrQ6WW2Uh6PEW6Jt7JL36uEWoUPVpyMMmreBvA"
+# 优先计算路径以加载 .env
+SCRIPT_DIR = Path(__file__).parent
+PROJECT_ROOT = SCRIPT_DIR.parent
+load_dotenv(PROJECT_ROOT / ".env")
 
-# 你的 Index 名称 (根据截图)
+PINECONE_API_KEY = os.getenv("PINECONE_API_KEY")
+if not PINECONE_API_KEY:
+    raise SystemExit("错误: 未在项目根目录的 .env 中找到 PINECONE_API_KEY，请添加后重试。")
+
+# 你的 Index 名称
 INDEX_NAME = "teamfight-tactics-knowledges"
 
 # 输入文件路径 (Embed 脚本生成的输出文件)
-SCRIPT_DIR = Path(__file__).parent
-PROJECT_ROOT = SCRIPT_DIR.parent
-#后期改为批量处理Embed脚本生成的所有文件
 INPUT_FILE = PROJECT_ROOT / "datas" / "EmbeddedData" / "opgg_tft_items_embedded.json"
 
 def clean_metadata(metadata):
     """
     清洗元数据：
-    1. 将数值型字符串转换为数字 (float/int)，以便进行范围过滤。
-    2. 确保所有字段类型符合 Pinecone 要求 (str, int, float, bool, list of str)。
+    动态遍历所有字段，尝试将看起来像数字的字符串转换为 float 或 int。
+    这样可以适应不同数据源的不同字段结构。
     """
     cleaned = metadata.copy()
     
-    # 需要尝试转换为数字的字段列表
-    number_fields = ['avg_rank', 'top4_rate', 'win_rate', 'pick_count', 'cost', 'damage', 'attack_speed']
-    
     for key, value in cleaned.items():
-        # 如果字段在列表中，或者看起来像数字
-        if key in number_fields or isinstance(value, str):
-            if isinstance(value, str):
-                # 移除常见非数字字符
-                clean_val = value.replace('#', '').replace('%', '').replace(',', '')
-                try:
-                    # 尝试转为 float
-                    if '.' in clean_val:
-                        cleaned[key] = float(clean_val)
-                    else:
-                        cleaned[key] = int(clean_val)
-                except ValueError:
-                    # 如果转换失败，保留原字符串
-                    pass
-    
+        # Pinecone 元数据只支持 str, int, float, bool, list[str]
+        # 我们主要关注将字符串类型的数字转换为真正的数字
+        if isinstance(value, str):
+            # 1. 预处理：移除常见的非数字字符 (%, #, ,)
+            # 注意：不要移除小数点(.)和负号(-)
+            clean_val = value.replace('%', '').replace('#', '').replace(',', '').strip()
+            
+            # 2. 尝试转换
+            try:
+                # 优先尝试转为 float
+                float_val = float(clean_val)
+                
+                # 3. 优化：如果是整数（如 4.0），转为 int 看起来更整洁
+                if float_val.is_integer():
+                    cleaned[key] = int(float_val)
+                else:
+                    cleaned[key] = float_val
+            except ValueError:
+                # 转换失败（说明是纯文本，如 "TFT_Item"），保留原样
+                pass
+        
+        # 额外安全检查：Pinecone 不支持 None/Null 值
+        elif value is None:
+            cleaned[key] = ""  # 或者直接 del cleaned[key]
+
     return cleaned
 
 def main():
@@ -81,15 +93,28 @@ def main():
     for i, item in enumerate(items):
         # 检查是否有向量数据
         if not item.get('values'):
-            print(f"警告: ID {item['id']} 缺少向量数据，跳过。")
+            print(f"警告: ID {item.get('id')} 缺少向量数据，跳过。")
             continue
 
+        # --- 修复 ID 非 ASCII 问题 ---
+        # 原始 ID: "tft_item_0_鬼索的狂暴之刃+"
+        # 我们可以保留原始 ID 在 metadata 中以便人类阅读，但 Pinecone 的主键 ID 必须是 ASCII
+        original_id = item['id']
+        
+        # 方法：将非 ASCII 字符转换为 Python 的 unicode escape 序列 (例如 \u9b3c)
+        # 或者更简单：直接把中文部分 encode 为 hex 或 base64，或者直接用索引
+        # 这里使用 encode('unicode_escape') 是一种保留语义且兼容 ASCII 的方式
+        ascii_id = original_id.encode('unicode_escape').decode('ascii')
+        
         # 清洗元数据 (关键步骤，为了支持 Filter)
-        cleaned_meta = clean_metadata(item['metadata'])
+        cleaned_meta = clean_metadata(item.get('metadata', {}))
+        
+        # 建议：把原始的可读 ID 存入 metadata，方便以后反查
+        cleaned_meta['original_id'] = original_id
 
         # 构建 Pinecone 向量对象
         vector_record = {
-            "id": item['id'],
+            "id": ascii_id,  # 使用转换后的 ASCII ID
             "values": item['values'],
             "metadata": cleaned_meta
         }
