@@ -88,7 +88,12 @@ class AskAIView(APIView):
             }
             return Response(response_data)
         except Exception as e:
-            return Response({"error": str(e)}, status=500)
+            # Even if AI fails, return the conversation_id so the frontend can update the list
+            return Response({
+                "error": str(e),
+                "conversation_id": conversation.id,
+                "answer": "抱歉，我现在无法连接到大脑，请稍后再试。"
+            }, status=500)
 
 class GenerateNoteView(APIView):
     def post(self, request:Request) -> Response:

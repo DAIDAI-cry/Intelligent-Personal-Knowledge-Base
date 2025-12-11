@@ -1,6 +1,6 @@
 "use client";
 import type React from "react";
-import Link from "next/link";
+
 import "./globals.css";
 import { ThemeProvider } from "next-themes";
 import { Button } from "@/components/ui/button";
@@ -8,10 +8,10 @@ import { useContext, useEffect, useRef } from "react";
 import { Player } from "@lordicon/react";
 import { AuthContext, AuthProvider } from "./contexts/AuthContext";
 import { useRouter } from "next/navigation";
-import logo from "./images/manual.png"
+
 import axios from "axios";
 import { toast, Toaster } from "sonner";
-import { Github, Globe, Linkedin } from "lucide-react";
+
 export default function RootLayout({
   children,
 }: {
@@ -106,43 +106,7 @@ function LayoutContent({ children }: { children: React.ReactNode }) {
         <Toaster position="top-center"/>
           {children}
         </main>
-        <footer className="border-t bg-muted relative">
-          <div className="container flex flex-col gap-6 py-8 md:flex-row md:items-center md:justify-between md:py-12">
-            <div className="flex items-center gap-2">
-            <img src={logo.src} className="h-6 w-6 ml-5"></img>
-              <span className="text-lg font-bold">Notecraft</span>
-            </div>
-            <nav className="flex gap-4 sm:gap-6">
-              <Link
-                href="https://github.com/ShlokArora2709"
-                className="text-sm font-medium hover:underline underline-offset-4 flex items-center gap-2"
-                target="_blank"
-              >
-                <Github className="w-4 h-4" />
-                Github
-              </Link>
-              <Link
-                href="https://shlokarora2709.github.io/"
-                className="text-sm font-medium hover:underline underline-offset-4 flex items-center gap-2"
-                target="_blank"
-              >
-                <Globe className="w-4 h-4" />
-                Portfolio
-              </Link>
-              <Link
-                href="https://www.linkedin.com/in/shlok-arora-091250269"
-                className="text-sm font-medium hover:underline underline-offset-4 flex items-center gap-2"
-                target="_blank"
-              >
-                <Linkedin className="w-4 h-4" />
-                Linkedin
-              </Link>
-            </nav>
-            <p className="text-sm text-muted-foreground">
-              Thank you for using Notecraft!
-            </p>
-          </div>
-        </footer>
+
       </div>
     </ThemeProvider>
   );
