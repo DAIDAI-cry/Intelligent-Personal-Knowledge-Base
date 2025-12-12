@@ -6,9 +6,27 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Send, Plus, User, MessageSquare, Trash2 } from "lucide-react";
+import { 
+  Send, 
+  Plus, 
+  User, 
+  MessageSquare, 
+  Trash2, 
+  PanelLeftClose, 
+  PanelLeftOpen, 
+  MoreHorizontal, 
+  Pencil, 
+  Pin 
+} from "lucide-react";
 import { motion } from "framer-motion";
 import { toast } from "sonner";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogFooter,
+} from "@/components/ui/dialog";
 
 interface Message {
   id: string;
@@ -20,6 +38,7 @@ interface Conversation {
   id: number;
   title: string;
   created_at: string;
+  isMarked?: boolean;
 }
 
 export default function ChatInterface() {
@@ -34,7 +53,43 @@ export default function ChatInterface() {
   const [isLoading, setIsLoading] = useState(false);
   const [conversations, setConversations] = useState<Conversation[]>([]);
   const [conversationId, setConversationId] = useState<number | null>(null);
+  const [isSidebarOpen, setIsSidebarOpen] = useState(true);
+  
+  // Menu & Rename State
+  const [activeMenuId, setActiveMenuId] = useState<number | null>(null);
+  const [renameDialogOpen, setRenameDialogOpen] = useState(false);
+  const [renamingId, setRenamingId] = useState<number | null>(null);
+  const [newTitle, setNewTitle] = useState("");
+
   const scrollAreaRef = useRef<HTMLDivElement>(null);
+
+  const handleRenameClick = (e: React.MouseEvent, conv: Conversation) => {
+    e.stopPropagation();
+    setRenamingId(conv.id);
+    setNewTitle(conv.title);
+    setRenameDialogOpen(true);
+    setActiveMenuId(null);
+  };
+
+  const handleRenameSubmit = () => {
+    if (!renamingId || !newTitle.trim()) return;
+    
+    setConversations(prev => prev.map(c => 
+      c.id === renamingId ? { ...c, title: newTitle.trim() } : c
+    ));
+    // TODO: Call API to update title on backend
+    setRenameDialogOpen(false);
+    setRenamingId(null);
+    toast.success("重命名成功");
+  };
+
+  const handleMarkClick = (e: React.MouseEvent, id: number) => {
+    e.stopPropagation();
+    setConversations(prev => prev.map(c => 
+      c.id === id ? { ...c, isMarked: !c.isMarked } : c
+    ));
+    setActiveMenuId(null);
+  };
 
   const getAuthHeaders = () => {
     const token = localStorage.getItem("accessToken");
@@ -198,7 +253,10 @@ export default function ChatInterface() {
   return (
     <div className="flex h-[calc(100vh-64px)] bg-white text-gray-900 font-sans">
       {/* Sidebar (Optional, can be hidden on small screens) */}
-      <div className="hidden md:flex w-[260px] flex-col bg-gray-50 border-r border-gray-200">
+      <div 
+        className={`${isSidebarOpen ? 'w-[260px] border-r' : 'w-0 border-none'} hidden md:flex flex-col bg-gray-50 border-gray-200 transition-all duration-300 ease-in-out overflow-hidden`}
+      >
+        <div className="w-[260px] flex flex-col h-full">
         <div className="p-4">
           <Button 
             variant="outline" 
@@ -215,26 +273,61 @@ export default function ChatInterface() {
               <div
                 key={conv.id}
                 onClick={() => loadConversation(conv.id)}
-                className={`group px-3 py-2 text-sm rounded-md cursor-pointer flex items-center justify-between gap-2 ${
+                className={`group relative px-3 py-2 text-sm rounded-md cursor-pointer flex items-center justify-between gap-2 ${
                   conversationId === conv.id 
                     ? "bg-gray-200 text-gray-900 font-medium" 
                     : "text-gray-500 hover:bg-gray-100"
                 }`}
               >
                 <div className="flex items-center gap-2 truncate overflow-hidden">
-                  <MessageSquare size={14} className="shrink-0"/>
+                  {conv.isMarked ? <Pin size={14} className="shrink-0 text-blue-500 fill-blue-500" /> : <MessageSquare size={14} className="shrink-0"/>}
                   <span className="truncate">{conv.title}</span>
                 </div>
+                
                 <div 
                   role="button"
-                  className={`p-1 rounded-sm hover:bg-gray-300 hover:text-red-600 transition-all ${
-                    conversationId === conv.id ? "opacity-100" : "opacity-0 group-hover:opacity-100"
+                  className={`p-1 rounded-sm hover:bg-gray-300 transition-all ${
+                    conversationId === conv.id || activeMenuId === conv.id ? "opacity-100" : "opacity-0 group-hover:opacity-100"
                   }`}
-                  onClick={(e) => deleteConversation(e, conv.id)}
-                  title="删除对话"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    setActiveMenuId(activeMenuId === conv.id ? null : conv.id);
+                  }}
                 >
-                  <Trash2 size={14} />
+                  <MoreHorizontal size={16} />
                 </div>
+
+                {activeMenuId === conv.id && (
+                  <>
+                    <div 
+                        className="fixed inset-0 z-40" 
+                        onClick={(e) => { e.stopPropagation(); setActiveMenuId(null); }} 
+                    />
+                    <div className="absolute right-2 top-8 z-50 w-32 bg-white border border-gray-200 rounded-md shadow-lg py-1 flex flex-col">
+                        <button 
+                            className="px-3 py-2 text-left text-xs hover:bg-gray-100 flex items-center gap-2"
+                            onClick={(e) => handleMarkClick(e, conv.id)}
+                        >
+                            <Pin size={12} /> {conv.isMarked ? "取消标记" : "标记"}
+                        </button>
+                        <button 
+                            className="px-3 py-2 text-left text-xs hover:bg-gray-100 flex items-center gap-2"
+                            onClick={(e) => handleRenameClick(e, conv)}
+                        >
+                            <Pencil size={12} /> 重命名
+                        </button>
+                        <button 
+                            className="px-3 py-2 text-left text-xs hover:bg-gray-100 text-red-600 flex items-center gap-2"
+                            onClick={(e) => {
+                                setActiveMenuId(null);
+                                deleteConversation(e, conv.id);
+                            }}
+                        >
+                            <Trash2 size={12} /> 删除
+                        </button>
+                    </div>
+                  </>
+                )}
               </div>
             ))}
           </div>
@@ -242,10 +335,27 @@ export default function ChatInterface() {
         <div className="p-4 border-t border-gray-200">
            {/* User profile or settings */}
         </div>
+        </div>
       </div>
 
-      {/* Main Chat Area */}
-      <div className="flex-1 flex flex-col relative max-w-4xl mx-auto w-full">
+      {/* Main Chat Area Wrapper */}
+      <div className="flex-1 flex flex-col relative bg-white min-w-0">
+        
+        {/* Toggle Button (Desktop) */}
+        <div className="absolute top-3 left-3 z-20 hidden md:block">
+            <Button 
+                variant="ghost" 
+                size="icon" 
+                onClick={() => setIsSidebarOpen(!isSidebarOpen)}
+                className="text-gray-500 hover:bg-gray-100"
+                title={isSidebarOpen ? "收起侧边栏" : "展开侧边栏"}
+            >
+                {isSidebarOpen ? <PanelLeftClose size={20} /> : <PanelLeftOpen size={20} />}
+            </Button>
+        </div>
+
+        {/* Chat Container */}
+        <div className="flex-1 flex flex-col relative max-w-4xl mx-auto w-full h-full">
         {/* Header */}
         <div className="flex items-center p-4 border-b border-gray-100 md:hidden">
              <span className="font-semibold text-gray-700">金铲铲智能助手</span>
@@ -332,6 +442,28 @@ export default function ChatInterface() {
           </div>
         </div>
       </div>
+    </div>
+
+    <Dialog open={renameDialogOpen} onOpenChange={setRenameDialogOpen}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>重命名对话</DialogTitle>
+          </DialogHeader>
+          <div className="py-4">
+            <Input
+              value={newTitle}
+              onChange={(e) => setNewTitle(e.target.value)}
+              placeholder="输入新的对话标题"
+              onKeyDown={(e) => e.key === "Enter" && handleRenameSubmit()}
+            />
+          </div>
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setRenameDialogOpen(false)}>取消</Button>
+            <Button onClick={handleRenameSubmit}>确认</Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
     </div>
   );
 }
