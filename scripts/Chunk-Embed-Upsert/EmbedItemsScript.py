@@ -98,7 +98,7 @@ def main():
     # 2. 检查输入目录
     if not INPUT_DIR.exists():
         print(f"错误: 输入目录不存在 {INPUT_DIR}")
-        print("请先运行 ChuckedItemsScript.py 生成数据。")
+        print("请先运行 ChunkedItemsScript.py 生成数据。")
         return
 
     # 3. 获取所有 JSON 文件

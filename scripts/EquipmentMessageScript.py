@@ -147,6 +147,7 @@ def scrape_opgg_to_json():
                 "values": [],  # 保持为空
                 "metadata": {
                     "text": full_text_desc,
+                    "type": "Item",
                     "item_name": item_name,
                     "recipe": recipe_str,
                     "avg_rank": avg_rank,
