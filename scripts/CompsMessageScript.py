@@ -2,6 +2,7 @@ import time
 import json
 import re
 import datetime
+import subprocess
 from pathlib import Path
 from selenium import webdriver
 from selenium.webdriver.edge.service import Service
@@ -23,11 +24,13 @@ def scrape_comps_to_json():
     edge_options.add_argument('--disable-gpu')
     edge_options.add_argument('--no-sandbox')
     edge_options.add_argument("--disable-blink-features=AutomationControlled")
+    edge_options.add_argument("--log-level=3")  # Suppress console logs
+    edge_options.add_argument("--silent")       # Suppress console logs
     edge_options.add_argument('user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36 Edg/131.0.0.0')
     edge_options.add_experimental_option('excludeSwitches', ['enable-logging'])
 
     try:
-        service = Service(executable_path=DRIVER_PATH)
+        service = Service(executable_path=DRIVER_PATH, log_output=subprocess.DEVNULL)
         driver = webdriver.Edge(service=service, options=edge_options)
     except Exception as e:
         print(f"驱动初始化失败: {e}")
@@ -85,19 +88,26 @@ def scrape_comps_to_json():
 
         for comp_data in found_comps:
             try:
+                # Helper for safe dict access
+                def safe_get(d, key, default=None):
+                    if not isinstance(d, dict): return default if default is not None else {}
+                    val = d.get(key)
+                    return val if val is not None else (default if default is not None else {})
+
                 # 提取基本信息
-                raw_name = comp_data.get('name', {})
+                raw_name = safe_get(comp_data, 'name')
                 if isinstance(raw_name, dict):
                     comp_name = raw_name.get('zh_CN', raw_name.get('en_US', '未命名阵容'))
                 else:
-                    comp_name = str(raw_name)
+                    comp_name = str(raw_name) if raw_name else '未命名阵容'
                 
                 team_code = comp_data.get('teamCode')
                 
                 # 提取统计数据
-                stat = comp_data.get('stat', {})
+                stat = safe_get(comp_data, 'stat')
                 op_tier = stat.get('opTier', 'Unknown')
-                deck_stats = stat.get('deck', {})
+                # 使用 label 统计数据，更符合页面显示
+                deck_stats = safe_get(stat, 'label')
                 
                 avg_rank = deck_stats.get('avgPlacement')
                 win_rate = deck_stats.get('winRate')
@@ -111,33 +121,67 @@ def scrape_comps_to_json():
 
                 # 提取单位
                 units = []
-                for u in comp_data.get('units', []):
-                    meta = u.get('meta', {})
-                    unit_name = meta.get('name', u.get('key'))
-                    cost = meta.get('cost')
-                    tier = u.get('tier') # 星级
-                    items = u.get('items', [])
-                    
-                    units.append({
-                        "name": unit_name,
-                        "cost": cost,
-                        "star_level": tier,
-                        "items": items
-                    })
+                raw_units = safe_get(comp_data, 'units', [])
+                if isinstance(raw_units, list):
+                    for u in raw_units:
+                        if not isinstance(u, dict): continue
+                        meta = safe_get(u, 'meta')
+                        unit_name = meta.get('name', u.get('key'))
+                        cost = meta.get('cost')
+                        tier = u.get('tier') # 星级
+                        items = u.get('items', [])
+                        cell = safe_get(u, 'cell')
+                        
+                        units.append({
+                            "name": unit_name,
+                            "cost": cost,
+                            "star_level": tier,
+                            "items": items,
+                            "position": f"({cell.get('x')}, {cell.get('y')})"
+                        })
 
-                # 提取羁绊
+                # 提取羁绊 (只保留激活的)
                 traits = []
-                for t in comp_data.get('traits', []):
-                    meta = t.get('meta', {})
-                    trait_name = meta.get('name', t.get('key'))
-                    num_units = t.get('numUnits')
-                    style = t.get('style') # 0=None, 1=Bronze, 2=Silver, 3=Gold, 4=Prismatic (guess)
-                    
-                    traits.append({
-                        "name": trait_name,
-                        "count": num_units,
-                        "style": style
-                    })
+                raw_traits = safe_get(comp_data, 'traits', [])
+                if isinstance(raw_traits, list):
+                    for t in raw_traits:
+                        if not isinstance(t, dict): continue
+                        meta = safe_get(t, 'meta')
+                        trait_name = meta.get('name', t.get('key'))
+                        num_units = t.get('numUnits')
+                        style = t.get('style') # 0=None, 1=Bronze, 2=Silver, 3=Gold, 4=Prismatic
+                        
+                        if style and style > 0:
+                            traits.append({
+                                "name": trait_name,
+                                "count": num_units,
+                                "style": style
+                            })
+
+                # 提取早期/中期阵容
+                early_comp = safe_get(comp_data, 'early')
+                mid_comp = safe_get(comp_data, 'middle')
+                
+                def process_stage_comp(stage_data):
+                    if not stage_data or not isinstance(stage_data, dict): return None
+                    stage_units = []
+                    raw_stage_units = safe_get(stage_data, 'units', [])
+                    if isinstance(raw_stage_units, list):
+                        for u in raw_stage_units:
+                            if not isinstance(u, dict): continue
+                            char_id = u.get('characterId')
+                            cell = safe_get(u, 'cell')
+                            stage_units.append({
+                                "id": char_id,
+                                "position": f"({cell.get('x')}, {cell.get('y')})"
+                            })
+                    return {
+                        "level": stage_data.get('level'),
+                        "units": stage_units
+                    }
+
+                early_info = process_stage_comp(early_comp)
+                mid_info = process_stage_comp(mid_comp)
 
                 # 构建描述文本
                 units_str = ", ".join([f"{u['name']}({u['star_level']}星)" for u in units])
@@ -152,6 +196,11 @@ def scrape_comps_to_json():
                     f"核心英雄: {units_str}。 "
                     f"激活羁绊: {traits_str}。"
                 )
+                
+                if early_info:
+                    full_text += f" 早期过渡(Lv{early_info['level']}): {len(early_info['units'])}个单位。"
+                if mid_info:
+                    full_text += f" 中期过渡(Lv{mid_info['level']}): {len(mid_info['units'])}个单位。"
 
                 vector_item = {
                     "id": f"tft_comp_{team_code}",
@@ -167,6 +216,8 @@ def scrape_comps_to_json():
                         "pick_rate": pick_rate,
                         "units": units,
                         "traits": traits,
+                        "early_comp": early_info,
+                        "mid_comp": mid_info,
                         "source_url": url,
                         "crawled_at": current_time,
                         "category": "TFT_Comp_Stats"
