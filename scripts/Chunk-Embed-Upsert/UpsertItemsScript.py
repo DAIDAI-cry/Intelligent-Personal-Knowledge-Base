@@ -24,14 +24,25 @@ INPUT_DIR = PROJECT_ROOT / "datas" / "EmbeddedData"
 def clean_metadata(metadata):
     """
     清洗元数据：
-    动态遍历所有字段，尝试将看起来像数字的字符串转换为 float 或 int。
-    包含百分比处理 (55.5% -> 0.555)。
+    1. 将 dict 或 list (非纯字符串列表) 序列化为 JSON 字符串，以满足 Pinecone 要求。
+    2. 动态遍历所有字段，尝试将看起来像数字的字符串转换为 float 或 int。
+    3. 处理 None 值。
     """
     cleaned = metadata.copy()
     
     for key, value in cleaned.items():
+        # 1. 处理复杂类型 (dict, list) -> JSON String
         # Pinecone 元数据只支持 str, int, float, bool, list[str]
-        if isinstance(value, str):
+        if isinstance(value, (dict, list)):
+            # 如果是 list，检查是否为纯字符串列表 (Pinecone 支持 list[str])
+            if isinstance(value, list) and all(isinstance(x, str) for x in value):
+                pass # 允许 list[str]
+            else:
+                # 其他情况 (dict, 或包含非字符串的 list) 统统转为 JSON 字符串
+                cleaned[key] = json.dumps(value, ensure_ascii=False)
+
+        # 2. 处理字符串 (尝试转数字)
+        elif isinstance(value, str):
             # 0. 检查特殊含义符号
             is_percent = '%' in value
             
@@ -57,7 +68,7 @@ def clean_metadata(metadata):
                 # 转换失败保留原样
                 pass
         
-        # 额外安全检查：Pinecone 不支持 None/Null 值
+        # 3. 额外安全检查：Pinecone 不支持 None/Null 值
         elif value is None:
             cleaned[key] = ""
 
