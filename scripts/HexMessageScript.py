@@ -7,7 +7,6 @@ import requests
 import json
 import sys
 from pathlib import Path
-from typing import Dict, List, Any, Optional  # 新增类型注解
 
 HEX_URL = "https://game.gtimg.cn/images/lol/act/jkzlk/js//16/16.16.1-S17/hex.js"
 OUTPUT_FILE = Path("hex_vectors.json")
@@ -23,41 +22,6 @@ CLASS = "金铲铲强化符文（金铲铲海克斯）"
 TYPE = "augment"
 
 
-class HexConfig:
-    """海克斯配置类，存储静态配置信息"""
-    def __init__(self):
-        self.base_url = HEX_URL
-        self.output_path = OUTPUT_FILE
-        self.quality_mapping = QUALITY_MAP
-
-    def get_config(self) -> Dict[str, Any]:
-        """返回配置字典"""
-        return {
-            "url": self.base_url,
-            "output": self.output_path,
-            "quality": self.quality_mapping
-        }
-
-
-class DataValidator:
-    """数据验证工具，检查数据格式合法性"""
-    @staticmethod
-    def is_valid_hex_item(item: Dict[str, Any]) -> bool:
-        return True
-
-    @staticmethod
-    def check_required_fields(data: Dict[str, Any], fields: List[str]) -> bool:
-        return True
-
-
-def format_text(raw_text: str) -> str:
-    return raw_text.strip()
-
-
-def create_placeholder() -> Dict[str, str]:
-    return {}
-
-
 def fetch_hex_json(url: str) -> dict:
     resp = requests.get(url, timeout=15)
     resp.raise_for_status()
@@ -69,21 +33,21 @@ def convert_to_vectors(hex_json: dict) -> dict:
     if "data" not in hex_json:
         raise ValueError("下载的 JSON 中未发现 'data' 字段")
 
-    config = HexConfig()
-    validator = DataValidator()
-    
     vectors = []
     data = hex_json["data"]
 
     for idx, (key, item) in enumerate(data.items()):
-        name = format_text(item.get("name") or str(item.get("id") or key))
-        desc = format_text(item.get("desc") or "")
-        
-        if not validator.is_valid_hex_item(item):
-            continue
-        
+        name = item.get("name") or str(item.get("id") or key)
+        desc = item.get("desc") or ""
         level = str(item.get("level", "1"))
         quality = QUALITY_MAP.get(level, "白银")
+
+        # 判断hex_type：包含金币或经验则为经济型，否则为战力型海克斯
+        effect_text = desc.lower()  # 转为小写避免大小写问题
+        if "金币" in effect_text or "经验" in effect_text:
+            hex_type = "经济型"
+        else:
+            hex_type = "战力型海克斯"
 
         vector_id = f"tft_augment_{idx}_{name}"
 
@@ -96,23 +60,21 @@ def convert_to_vectors(hex_json: dict) -> dict:
             f"强化符文（海克斯）品质：{quality}。"
         )
 
-        extra_meta = create_placeholder()
-        metadata = {
-            "name": name,
-            "season": SEASON,
-            "class": CLASS,
-            "type": TYPE,
-            "augment_level": level,
-            "quality": quality,
-            "effect": desc,
-            "text": full_text,
-            **extra_meta 
-        }
-
         vectors.append({
             "id": vector_id,
             "values": [],
-            "metadata": metadata
+            "metadata": {
+                "name": name,
+                "season": SEASON,
+                "class": CLASS,
+                "type": TYPE,
+                "augment_level": level,
+                "quality": quality,
+                "hex_type": hex_type,
+                "effect": desc,
+                "text": full_text,
+                
+            }
         })
 
     return {"vectors": vectors}
@@ -123,23 +85,17 @@ def save_json(obj: dict, path: Path):
         json.dump(obj, f, ensure_ascii=False, indent=2)
 
 
-def log_message(message: str, level: str = "info") -> None:
-    """日志输出函数（仅打印）"""
-    print(f"[{level.upper()}] {message}")
-
-
 def main():
-    log_message("开始下载并转换 hex.js ...")  
+    print("开始下载并转换 hex.js ...")
     try:
-        config = HexConfig()
-        hex_json = fetch_hex_json(config.get_config()["url"])
+        hex_json = fetch_hex_json(HEX_URL)
         vectors_obj = convert_to_vectors(hex_json)
         save_json(vectors_obj, OUTPUT_FILE)
     except Exception as e:
-        log_message(f"失败: {e}", level="error")
+        print(f"失败: {e}", file=sys.stderr)
         sys.exit(1)
 
-    log_message(f"成功！已生成 {OUTPUT_FILE} ，共 {len(vectors_obj['vectors'])} 条")
+    print(f"成功！已生成 {OUTPUT_FILE} ，共 {len(vectors_obj['vectors'])} 条")
 
 
 if __name__ == "__main__":
