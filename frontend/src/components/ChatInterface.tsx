@@ -16,10 +16,13 @@ import {
   PanelLeftOpen, 
   MoreHorizontal, 
   Pencil, 
-  Pin 
+  Pin,
+  Copy,
+  Check
 } from "lucide-react";
 import { motion } from "framer-motion";
 import { toast } from "sonner";
+import { MarkdownRenderer } from "./MarkdownRenderer";
 import {
   Dialog,
   DialogContent,
@@ -365,39 +368,11 @@ export default function ChatInterface() {
         <ScrollArea className="flex-1 p-4" ref={scrollAreaRef}>
           <div className="space-y-6 pb-4">
             {messages.map((message) => (
-              <div
-                key={message.id}
-                className={`flex gap-4 items-center ${
-                  message.role === "user" ? "justify-end" : "justify-start"
-                }`}
-              >
-                {message.role === "assistant" && (
-                  <Avatar className="w-18 h-18 border border-gray-200 bg-white shrink-0">
-                    <AvatarImage src="/images/penguin.png" alt="AI" />
-                    {/* <AvatarFallback>AI</AvatarFallback> */}
-                  </Avatar>
-                )}
-                
-                <div
-                  className={`relative max-w-[80%] px-4 py-3 rounded-2xl text-sm leading-relaxed ${
-                    message.role === "user"
-                      ? "bg-blue-600 text-white rounded-br-sm"
-                      : "bg-gray-100 text-gray-800 rounded-bl-sm"
-                  }`}
-                >
-                  {message.content}
-                </div>
-
-                {message.role === "user" && (
-                   <Avatar className="w-18 h-18 border border-gray-200 bg-gray-100 shrink-0">
-                      <AvatarFallback><User size={16}/></AvatarFallback>
-                   </Avatar>
-                )}
-              </div>
+              <MessageBubble key={message.id} message={message} />
             ))}
             {isLoading && (
               <div className="flex gap-4 justify-start">
-                 <Avatar className="w-18 h-18 border border-gray-200 bg-white shrink-0">
+                 <Avatar className="w-10 h-10 border border-gray-200 bg-white shrink-0 mt-1">
                     <AvatarImage src="/images/penguin.png" alt="AI" />
                     {/* <AvatarFallback>AI</AvatarFallback> */}
                   </Avatar>
@@ -464,6 +439,67 @@ export default function ChatInterface() {
         </DialogContent>
       </Dialog>
 
+    </div>
+  );
+}
+
+function MessageBubble({ message }: { message: Message }) {
+  const [isCopied, setIsCopied] = useState(false);
+
+  const handleCopy = () => {
+    navigator.clipboard.writeText(message.content);
+    setIsCopied(true);
+    toast.success("已复制");
+    setTimeout(() => setIsCopied(false), 2000);
+  };
+
+  return (
+    <div
+      className={`flex gap-4 items-start ${
+        message.role === "user" ? "justify-end" : "justify-start"
+      }`}
+    >
+      {message.role === "assistant" && (
+        <Avatar className="w-10 h-10 border border-gray-200 bg-white shrink-0 mt-1">
+          <AvatarImage src="/images/penguin.png" alt="AI" />
+          <AvatarFallback>AI</AvatarFallback>
+        </Avatar>
+      )}
+      
+      <div className={`group relative max-w-[80%] ${message.role === "user" ? "text-right" : "text-left"}`}>
+        <div
+          className={`relative px-4 py-3 rounded-2xl text-sm leading-relaxed text-left inline-block ${
+            message.role === "user"
+              ? "bg-blue-600 text-white rounded-br-sm"
+              : "bg-gray-100 text-gray-800 rounded-bl-sm"
+          }`}
+        >
+          {message.role === "assistant" ? (
+             <MarkdownRenderer content={message.content} />
+          ) : (
+             <div className="whitespace-pre-wrap">{message.content}</div>
+          )}
+        </div>
+
+        {/* Copy Button */}
+        <div className={`absolute top-2 ${message.role === "user" ? "-left-8" : "-right-8"} opacity-0 group-hover:opacity-100 transition-opacity`}>
+            <Button
+                variant="ghost"
+                size="icon"
+                className="h-6 w-6 rounded-full bg-white hover:bg-gray-100 border border-gray-200 shadow-sm"
+                onClick={handleCopy}
+                title="复制消息"
+            >
+                {isCopied ? <Check size={12} className="text-green-600" /> : <Copy size={12} className="text-gray-500" />}
+            </Button>
+        </div>
+      </div>
+
+      {message.role === "user" && (
+         <Avatar className="w-10 h-10 border border-gray-200 bg-gray-100 shrink-0 mt-1">
+            <AvatarFallback><User size={16}/></AvatarFallback>
+         </Avatar>
+      )}
     </div>
   );
 }
