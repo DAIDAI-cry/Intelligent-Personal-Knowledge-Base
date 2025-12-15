@@ -123,34 +123,8 @@ def query_ai(query: str):
     try:
         if not pc:
             raise ValueError("Pinecone not initialized")
-            
-        # 1. Embed Query
-        query_embedding = pc.inference.embed(
-            model="llama-text-embed-v2",
-            inputs=[query],
-            parameters={"input_type": "query"}
-        )[0]['values']
-        
-        # 2. Search Pinecone
-        index = get_index()
-        results = index.query(
-            vector=query_embedding,
-            top_k=5,
-            include_metadata=True
-        )
-        
-        context_text = ""
-        sources = []
-        if results.matches:
-            for match in results.matches:
-                if match.metadata and "text" in match.metadata:
-                    context_text += match.metadata["text"] + "\n\n"
-                    sources.append(match.metadata.get("source", "unknown"))
-        
-        if not context_text:
-            context_text = "No relevant context found in the knowledge base."
 
-        # 3. Initialize LLM with DeepSeek (using the key stored in OPEN_ROUTER_API_KEY)
+        # Initialize LLM first (needed for query expansion)
         open_router_key = os.getenv("OPEN_ROUTER_API_KEY")
         if not open_router_key:
             raise ValueError("OPEN_ROUTER_API_KEY not found in environment variables")
@@ -164,11 +138,91 @@ def query_ai(query: str):
             temperature=0
         )
 
-        # 4. Construct Prompt
+        # 1. Query Expansion / Keyword Extraction
+        # Generate search queries based on user input to capture all entities
+        expansion_prompt = """
+        你是一个《金铲铲之战》（Teamfight Tactics）的搜索优化助手。
+        用户的输入可能包含游戏术语、海克斯强化、英雄或装备。
+        请分析用户的输入，提取出需要搜索的核心关键词。
+        
+        策略：
+        1. 如果涉及比较（如“A还是B”），请分别提取 A 和 B。
+        2. 识别专有名词，如“升级咯”、“潘朵拉的装备”等海克斯名称。
+        3. 如果用户询问某一类别的列表（如“5费卡有哪些”），请生成该类别的多种同义词查询（如“5费英雄”、“5费弈子”、“橙卡”），以增加召回率。
+        4. 请直接输出关键词列表，每行一个。不要包含其他文字。
+        """
+        
+        expansion_messages = [
+            SystemMessage(content=expansion_prompt),
+            HumanMessage(content=query)
+        ]
+        
+        search_queries = []
+        try:
+            # Use a separate try-except for expansion to not fail the whole request
+            expansion_response = llm.invoke(expansion_messages)
+            search_queries = [q.strip() for q in expansion_response.content.split('\n') if q.strip()]
+            print(f"Generated search queries: {search_queries}")
+        except Exception as e:
+            print(f"Query expansion failed: {e}")
+
+        # Always include the original query as a fallback/supplement
+        if query not in search_queries:
+            search_queries.append(query)
+            
+        # 2. Search Pinecone for each query
+        index = get_index()
+        seen_ids = set()
+        all_matches = []
+        
+        for q in search_queries:
+            try:
+                # Embed Query
+                query_embedding = pc.inference.embed(
+                    model="llama-text-embed-v2",
+                    inputs=[q],
+                    parameters={"input_type": "query"}
+                )[0]['values']
+                
+                # Search Pinecone
+                results = index.query(
+                    vector=query_embedding,
+                    top_k=1000, # Increased to 20 to capture lists of items (e.g. "all 5 cost units")
+                    include_metadata=True
+                )
+                
+                if results.matches:
+                    for match in results.matches:
+                        if match.id not in seen_ids:
+                            seen_ids.add(match.id)
+                            all_matches.append(match)
+            except Exception as e:
+                print(f"Error searching for query '{q}': {e}")
+
+        # Sort by score and take top K
+        # We do NOT sort and slice globally anymore to prevent one topic dominating the results.
+        # We keep all unique matches from all sub-queries.
+        final_matches = all_matches
+        
+        context_text = ""
+        sources = []
+        for match in final_matches:
+            if match.metadata and "text" in match.metadata:
+                context_text += match.metadata["text"] + "\n\n"
+                sources.append(match.metadata.get("source", "unknown"))
+        
+        if not context_text:
+            context_text = "No relevant context found in the knowledge base."
+
+        # 3. Construct Prompt for Final Answer
         system_prompt = """
         你是一个《金铲铲之战》（Teamfight Tactics）的高手教练和智能助手。
         请根据下方的【参考资料】回答用户的问题。
-        如果资料里没有提到，就诚实地说不知道，不要编造羁绊或装备数据。
+        
+        回答原则：
+        1. **全面性**：如果用户询问列表（如“有哪些5费卡”、“推荐阵容有哪些”），请务必列出资料中提到的**所有**相关条目，不要遗漏。
+        2. **准确性**：如果资料里没有提到，就诚实地说不知道，不要编造羁绊或装备数据。
+        3. **结构化**：使用 Markdown 列表清晰展示信息，便于阅读。
         """
         
         user_prompt = f"""
@@ -183,7 +237,7 @@ def query_ai(query: str):
             HumanMessage(content=user_prompt)
         ]
         
-        # 5. Invoke LLM
+        # 4. Invoke LLM
         response = llm.invoke(messages)
         
         return {
