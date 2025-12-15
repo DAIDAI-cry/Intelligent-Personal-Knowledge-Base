@@ -257,9 +257,9 @@ export default function ChatInterface() {
     <div className="flex h-[calc(100vh-64px)] bg-white text-gray-900 font-sans">
       {/* Sidebar (Optional, can be hidden on small screens) */}
       <div 
-        className={`${isSidebarOpen ? 'w-[260px] border-r' : 'w-0 border-none'} hidden md:flex flex-col bg-gray-50 border-gray-200 transition-all duration-300 ease-in-out overflow-hidden`}
+        className={`${isSidebarOpen ? 'w-[260px] border-r' : 'w-0 border-none'} shrink-0 hidden md:flex flex-col bg-gray-50 border-gray-200 transition-all duration-300 ease-in-out overflow-hidden`}
       >
-        <div className="w-[260px] flex flex-col h-full">
+        <div className="w-full flex flex-col h-full">
         <div className="p-4">
           <Button 
             variant="outline" 
@@ -276,21 +276,20 @@ export default function ChatInterface() {
               <div
                 key={conv.id}
                 onClick={() => loadConversation(conv.id)}
-                className={`group relative px-3 py-2 text-sm rounded-md cursor-pointer flex items-center justify-between gap-2 ${
+                className={`group relative px-2 py-2 text-sm rounded-md cursor-pointer grid grid-cols-[minmax(0,1fr)_auto] items-center gap-2 w-full ${
                   conversationId === conv.id 
                     ? "bg-gray-200 text-gray-900 font-medium" 
                     : "text-gray-500 hover:bg-gray-100"
                 }`}
               >
-                <div className="flex items-center gap-2 truncate overflow-hidden">
+                <div className="flex items-center gap-2 overflow-hidden">
                   {conv.isMarked ? <Pin size={14} className="shrink-0 text-blue-500 fill-blue-500" /> : <MessageSquare size={14} className="shrink-0"/>}
                   <span className="truncate">{conv.title}</span>
                 </div>
                 
-                <div 
-                  role="button"
-                  className={`p-1 rounded-sm hover:bg-gray-300 transition-all ${
-                    conversationId === conv.id || activeMenuId === conv.id ? "opacity-100" : "opacity-0 group-hover:opacity-100"
+                <button 
+                  className={`shrink-0 w-7 h-7 flex items-center justify-center rounded hover:bg-gray-300 transition-colors z-10 ${
+                     conversationId === conv.id ? "text-gray-700" : "text-gray-400 hover:text-gray-700"
                   }`}
                   onClick={(e) => {
                     e.stopPropagation();
@@ -298,7 +297,7 @@ export default function ChatInterface() {
                   }}
                 >
                   <MoreHorizontal size={16} />
-                </div>
+                </button>
 
                 {activeMenuId === conv.id && (
                   <>
