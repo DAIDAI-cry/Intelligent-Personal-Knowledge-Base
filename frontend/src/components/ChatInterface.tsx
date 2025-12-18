@@ -18,11 +18,13 @@ import {
   Pencil, 
   Pin,
   Copy,
-  Check
+  Check,
+  LogOut
 } from "lucide-react";
 import { motion } from "framer-motion";
 import { toast } from "sonner";
 import { MarkdownRenderer } from "./MarkdownRenderer";
+import { useRouter } from "next/navigation";
 import {
   Dialog,
   DialogContent,
@@ -45,13 +47,7 @@ interface Conversation {
 }
 
 export default function ChatInterface() {
-  const [messages, setMessages] = useState<Message[]>([
-    {
-      id: "1",
-      role: "assistant",
-      content: "你好！我是金铲铲智能助手。有什么我可以帮你的吗？比如询问当前赛季的强势阵容。",
-    },
-  ]);
+  const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [conversations, setConversations] = useState<Conversation[]>([]);
@@ -65,6 +61,7 @@ export default function ChatInterface() {
   const [newTitle, setNewTitle] = useState("");
 
   const scrollAreaRef = useRef<HTMLDivElement>(null);
+  const router = useRouter();
 
   const handleRenameClick = (e: React.MouseEvent, conv: Conversation) => {
     e.stopPropagation();
@@ -146,15 +143,28 @@ export default function ChatInterface() {
     }
   };
 
+  const handleLogout = async () => {
+    try {
+      const token = localStorage.getItem("accessToken");
+      if (token) {
+        await axios.post("http://localhost:8000/logout/", {}, {
+          headers: { Authorization: `Bearer ${token}` }
+        });
+      }
+    } catch (error) {
+      console.error("Logout error:", error);
+    } finally {
+      localStorage.removeItem("accessToken");
+      localStorage.removeItem("refreshToken");
+      localStorage.removeItem("username");
+      toast.success("已退出登录");
+      router.push("/login");
+    }
+  };
+
   const handleNewChat = () => {
     setConversationId(null);
-    setMessages([
-      {
-        id: "1",
-        role: "assistant",
-        content: "你好！我是金铲铲智能助手。有什么我可以帮你的吗？比如询问当前赛季的强势阵容。",
-      },
-    ]);
+    setMessages([]);
   };
 
   useEffect(() => {
@@ -253,8 +263,32 @@ export default function ChatInterface() {
     }
   }, [messages]);
 
+  const renderInputBox = () => (
+    <div className="relative flex items-center w-full bg-white border border-gray-300 rounded-full shadow-sm focus-within:ring-2 focus-within:ring-blue-100 focus-within:border-blue-400 transition-all">
+      <Button variant="ghost" size="icon" className="ml-2 text-gray-400 hover:text-gray-600 rounded-full">
+          <Plus size={20} />
+      </Button>
+      <Input
+        value={input}
+        onChange={(e) => setInput(e.target.value)}
+        onKeyDown={(e) => e.key === "Enter" && !e.shiftKey && handleSend()}
+        placeholder="给金铲铲智能助手发送消息"
+        className="flex-1 border-none shadow-none focus-visible:ring-0 bg-transparent py-4 px-4 text-base h-auto"
+      />
+      <Button 
+          onClick={handleSend} 
+          disabled={!input.trim() || isLoading}
+          size="icon"
+          className={`mr-2 rounded-full transition-all ${input.trim() ? 'bg-black text-white hover:bg-gray-800' : 'bg-gray-200 text-gray-400 hover:bg-gray-200'}`}
+      >
+        <Send size={18} />
+      </Button>
+    </div>
+  );
+
   return (
-    <div className="flex h-[calc(100vh-64px)] bg-white text-gray-900 font-sans">
+    <>
+    <div className="flex h-screen bg-white text-gray-900 font-sans">
       {/* Sidebar (Optional, can be hidden on small screens) */}
       <div 
         className={`${isSidebarOpen ? 'w-[260px] border-r' : 'w-0 border-none'} shrink-0 hidden md:flex flex-col bg-gray-50 border-gray-200 transition-all duration-300 ease-in-out overflow-hidden`}
@@ -335,7 +369,25 @@ export default function ChatInterface() {
           </div>
         </ScrollArea>
         <div className="p-4 border-t border-gray-200">
-           {/* User profile or settings */}
+           <div className="flex items-center justify-between">
+              <div className="flex items-center gap-2">
+                  <Avatar className="w-8 h-8 border border-gray-200 bg-gray-100">
+                      <AvatarFallback><User size={16}/></AvatarFallback>
+                  </Avatar>
+                  <span className="text-sm font-medium text-gray-700 truncate max-w-[120px]">
+                      {typeof window !== 'undefined' ? localStorage.getItem("username") || "用户" : "用户"}
+                  </span>
+              </div>
+              <Button 
+                  variant="ghost" 
+                  size="icon" 
+                  className="text-gray-500 hover:text-red-600 hover:bg-red-50"
+                  onClick={handleLogout}
+                  title="退出登录"
+              >
+                  <LogOut size={18} />
+              </Button>
+           </div>
         </div>
         </div>
       </div>
@@ -356,65 +408,68 @@ export default function ChatInterface() {
             </Button>
         </div>
 
-        {/* Chat Container */}
-        <div className="flex-1 flex flex-col relative max-w-4xl mx-auto w-full h-full">
-        {/* Header */}
-        <div className="flex items-center p-4 border-b border-gray-100 md:hidden">
-             <span className="font-semibold text-gray-700">金铲铲智能助手</span>
-        </div>
-
-        {/* Messages */}
-        <ScrollArea className="flex-1 p-4" ref={scrollAreaRef}>
-          <div className="space-y-6 pb-4">
-            {messages.map((message) => (
-              <MessageBubble key={message.id} message={message} />
-            ))}
-            {isLoading && (
-              <div className="flex gap-4 justify-start">
-                 <Avatar className="w-10 h-10 border border-gray-200 bg-white shrink-0 mt-1">
-                    <AvatarImage src="/images/penguin.png" alt="AI" />
-                    {/* <AvatarFallback>AI</AvatarFallback> */}
-                  </Avatar>
-                  <div className="bg-gray-100 px-4 py-3 rounded-2xl rounded-bl-sm flex items-center">
-                    <div className="flex space-x-1">
-                        <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: '0ms' }}></div>
-                        <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: '150ms' }}></div>
-                        <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: '300ms' }}></div>
+        {messages.length === 0 ? (
+            // === Welcome View ===
+            <div className="flex-1 flex flex-col items-center justify-center p-4 w-full">
+                <div className="mb-8 flex items-center gap-3 animate-in fade-in zoom-in duration-500">
+                    <img src="/images/jcc_white.png" alt="Logo" className="w-10 h-10 object-contain" />
+                    <h2 className="text-2xl font-semibold text-gray-700">今天有什么可以帮到你？</h2>
+                </div>
+                
+                <div className="w-full max-w-2xl px-4 animate-in slide-in-from-bottom-4 duration-700">
+                    {renderInputBox()}
+                    <div className="text-center mt-4">
+                        <p className="text-xs text-gray-400">
+                            AI 生成的内容可能不准确，请核对重要信息。
+                        </p>
                     </div>
-                  </div>
-              </div>
-            )}
-          </div>
-        </ScrollArea>
+                </div>
+            </div>
+        ) : (
+            // === Chat View ===
+            <div className="flex-1 flex flex-col relative max-w-4xl mx-auto w-full h-full">
+                {/* Header */}
+                <div className="flex items-center p-4 border-b border-gray-100 md:hidden">
+                    <span className="font-semibold text-gray-700">金铲铲智能助手</span>
+                </div>
 
-        {/* Input Area */}
-        <div className="p-4 bg-white">
-          <div className="relative flex items-center max-w-3xl mx-auto bg-white border border-gray-300 rounded-full shadow-sm focus-within:ring-2 focus-within:ring-blue-100 focus-within:border-blue-400 transition-all">
-            <Button variant="ghost" size="icon" className="ml-2 text-gray-400 hover:text-gray-600 rounded-full">
-                <Plus size={20} />
-            </Button>
-            <Input
-              value={input}
-              onChange={(e) => setInput(e.target.value)}
-              onKeyDown={(e) => e.key === "Enter" && !e.shiftKey && handleSend()}
-              placeholder="给金铲铲智能助手发送消息"
-              className="flex-1 border-none shadow-none focus-visible:ring-0 bg-transparent py-6 px-4 text-base"
-            />
-            <Button 
-                onClick={handleSend} 
-                disabled={!input.trim() || isLoading}
-                size="icon"
-                className={`mr-2 rounded-full transition-all ${input.trim() ? 'bg-black text-white hover:bg-gray-800' : 'bg-gray-200 text-gray-400 hover:bg-gray-200'}`}
-            >
-              <Send size={18} />
-            </Button>
-          </div>
-          <div className="text-center mt-2">
-             <p className="text-xs text-gray-400">
-                AI 生成的内容可能不准确，请核对重要信息。
-             </p>
-          </div>
-        </div>
+                {/* Messages */}
+                <ScrollArea className="flex-1 p-4" ref={scrollAreaRef}>
+                <div className="space-y-6 pb-4">
+                    {messages.map((message) => (
+                    <MessageBubble key={message.id} message={message} />
+                    ))}
+                    {isLoading && (
+                    <div className="flex gap-4 justify-start">
+                        <Avatar className="w-10 h-10 border border-gray-200 bg-white shrink-0 mt-1">
+                            <AvatarImage src="/images/penguin.png" alt="AI" />
+                            {/* <AvatarFallback>AI</AvatarFallback> */}
+                        </Avatar>
+                        <div className="bg-gray-100 px-4 py-3 rounded-2xl rounded-bl-sm flex items-center">
+                            <div className="flex space-x-1">
+                                <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: '0ms' }}></div>
+                                <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: '150ms' }}></div>
+                                <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: '300ms' }}></div>
+                            </div>
+                        </div>
+                    </div>
+                    )}
+                </div>
+                </ScrollArea>
+
+                {/* Input Area */}
+                <div className="p-4 bg-white">
+                    <div className="max-w-3xl mx-auto">
+                        {renderInputBox()}
+                        <div className="text-center mt-2">
+                            <p className="text-xs text-gray-400">
+                                AI 生成的内容可能不准确，请核对重要信息。
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        )}
       </div>
     </div>
 
@@ -437,8 +492,7 @@ export default function ChatInterface() {
           </DialogFooter>
         </DialogContent>
       </Dialog>
-
-    </div>
+    </>
   );
 }
 
