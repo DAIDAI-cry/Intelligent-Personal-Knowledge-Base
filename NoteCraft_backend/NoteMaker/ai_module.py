@@ -10,6 +10,7 @@ from pinecone import Pinecone
 from django.conf import settings
 #from langchain.schema import HumanMessage, SystemMessage
 from langchain_core.messages import HumanMessage, SystemMessage
+from .prompts import EXPANSION_PROMPT, SYSTEM_PROMPT
 load_dotenv()
 
 # Initialize Pinecone
@@ -140,17 +141,7 @@ def query_ai(query: str):
 
         # 1. Query Expansion / Keyword Extraction
         # Generate search queries based on user input to capture all entities
-        expansion_prompt = """
-        你是一个《金铲铲之战》（Teamfight Tactics）的搜索优化助手。
-        用户的输入可能包含游戏术语、海克斯强化、英雄或装备。
-        请分析用户的输入，提取出需要搜索的核心关键词。
-        
-        策略：
-        1. 如果涉及比较（如“A还是B”），请分别提取 A 和 B。
-        2. 识别专有名词，如“升级咯”、“潘朵拉的装备”等海克斯名称。
-        3. 如果用户询问某一类别的列表（如“5费卡有哪些”），请生成该类别的多种同义词查询（如“5费英雄”、“5费弈子”、“橙卡”），以增加召回率。
-        4. 请直接输出关键词列表，每行一个。不要包含其他文字。
-        """
+        expansion_prompt = EXPANSION_PROMPT
         
         expansion_messages = [
             SystemMessage(content=expansion_prompt),
@@ -215,15 +206,7 @@ def query_ai(query: str):
             context_text = "No relevant context found in the knowledge base."
 
         # 3. Construct Prompt for Final Answer
-        system_prompt = """
-        你是一个《金铲铲之战》（Teamfight Tactics）的高手教练和智能助手。
-        请根据下方的【参考资料】回答用户的问题。
-        
-        回答原则：
-        1. **全面性**：如果用户询问列表（如“有哪些5费卡”、“推荐阵容有哪些”），请务必列出资料中提到的**所有**相关条目，不要遗漏。
-        2. **准确性**：如果资料里没有提到，就诚实地说不知道，不要编造羁绊或装备数据。
-        3. **结构化**：使用 Markdown 列表清晰展示信息，便于阅读。
-        """
+        system_prompt = SYSTEM_PROMPT
         
         user_prompt = f"""
         【参考资料】：
