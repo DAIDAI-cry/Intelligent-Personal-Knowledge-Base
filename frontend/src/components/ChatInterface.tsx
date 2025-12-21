@@ -19,11 +19,15 @@ import {
   Pin,
   Copy,
   Check,
-  LogOut
+  LogOut,
+  Hexagon,
+  Sword,
+  Box
 } from "lucide-react";
 import { motion } from "framer-motion";
 import { toast } from "sonner";
 import { MarkdownRenderer } from "./MarkdownRenderer";
+import HexesInterface from "./HexesInterface";
 import { useRouter } from "next/navigation";
 import {
   Dialog,
@@ -53,6 +57,7 @@ export default function ChatInterface() {
   const [conversations, setConversations] = useState<Conversation[]>([]);
   const [conversationId, setConversationId] = useState<number | null>(null);
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
+  const [activeView, setActiveView] = useState<'chat' | 'hexes' | 'items' | 'champions'>('chat');
   
   // Menu & Rename State
   const [activeMenuId, setActiveMenuId] = useState<number | null>(null);
@@ -392,84 +397,122 @@ export default function ChatInterface() {
         </div>
       </div>
 
-      {/* Main Chat Area Wrapper */}
-      <div className="flex-1 flex flex-col relative bg-white min-w-0">
+      {/* Main Content Area */}
+      <div className="flex-1 flex flex-col relative bg-white min-w-0 overflow-hidden">
         
-        {/* Toggle Button (Desktop) */}
-        <div className="absolute top-3 left-3 z-20 hidden md:block">
-            <Button 
-                variant="ghost" 
-                size="icon" 
-                onClick={() => setIsSidebarOpen(!isSidebarOpen)}
-                className="text-gray-500 hover:bg-gray-100"
-                title={isSidebarOpen ? "收起侧边栏" : "展开侧边栏"}
-            >
-                {isSidebarOpen ? <PanelLeftClose size={20} /> : <PanelLeftOpen size={20} />}
-            </Button>
-        </div>
-
-        {messages.length === 0 ? (
-            // === Welcome View ===
-            <div className="flex-1 flex flex-col items-center justify-center p-4 w-full">
-                <div className="mb-8 flex items-center gap-3 animate-in fade-in zoom-in duration-500">
-                    <img src="/images/jcc_white.png" alt="Logo" className="w-10 h-10 object-contain" />
-                    <h2 className="text-2xl font-semibold text-gray-700">今天有什么可以帮到你？</h2>
-                </div>
-                
-                <div className="w-full max-w-2xl px-4 animate-in slide-in-from-bottom-4 duration-700">
-                    {renderInputBox()}
-                    <div className="text-center mt-4">
-                        <p className="text-xs text-gray-400">
-                            AI 生成的内容可能不准确，请核对重要信息。
-                        </p>
-                    </div>
-                </div>
-            </div>
-        ) : (
-            // === Chat View ===
-            <div className="flex-1 flex flex-col relative max-w-4xl mx-auto w-full h-full">
-                {/* Header */}
-                <div className="flex items-center p-4 border-b border-gray-100 md:hidden">
-                    <span className="font-semibold text-gray-700">金铲铲智能助手</span>
-                </div>
-
-                {/* Messages */}
-                <ScrollArea className="flex-1 p-4" ref={scrollAreaRef}>
-                <div className="space-y-6 pb-4">
-                    {messages.map((message) => (
-                    <MessageBubble key={message.id} message={message} />
-                    ))}
-                    {isLoading && (
-                    <div className="flex gap-4 justify-start">
-                        <Avatar className="w-10 h-10 border border-gray-200 bg-white shrink-0 mt-1">
-                            <AvatarImage src="/images/penguin.png" alt="AI" />
-                            {/* <AvatarFallback>AI</AvatarFallback> */}
-                        </Avatar>
-                        <div className="bg-gray-100 px-4 py-3 rounded-2xl rounded-bl-sm flex items-center">
-                            <div className="flex space-x-1">
-                                <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: '0ms' }}></div>
-                                <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: '150ms' }}></div>
-                                <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: '300ms' }}></div>
-                            </div>
-                        </div>
-                    </div>
-                    )}
-                </div>
-                </ScrollArea>
-
-                {/* Input Area */}
-                <div className="p-4 bg-white">
-                    <div className="max-w-3xl mx-auto">
-                        {renderInputBox()}
-                        <div className="text-center mt-2">
-                            <p className="text-xs text-gray-400">
-                                AI 生成的内容可能不准确，请核对重要信息。
-                            </p>
-                        </div>
-                    </div>
-                </div>
-            </div>
+        {/* Toggle Button (Desktop) - Only show in chat view or if needed */}
+        {activeView === 'chat' && (
+          <div className="absolute top-3 left-3 z-20 hidden md:block">
+              <Button 
+                  variant="ghost" 
+                  size="icon" 
+                  onClick={() => setIsSidebarOpen(!isSidebarOpen)}
+                  className="text-gray-500 hover:bg-gray-100"
+                  title={isSidebarOpen ? "收起侧边栏" : "展开侧边栏"}
+              >
+                  {isSidebarOpen ? <PanelLeftClose size={20} /> : <PanelLeftOpen size={20} />}
+              </Button>
+          </div>
         )}
+
+        {activeView === 'chat' ? (
+          messages.length === 0 ? (
+              // === Welcome View ===
+              <div className="flex-1 flex flex-col items-center justify-center p-4 w-full">
+                  <div className="mb-8 flex items-center gap-3 animate-in fade-in zoom-in duration-500">
+                      <img src="/images/jcc_white.png" alt="Logo" className="w-10 h-10 object-contain" />
+                      <h2 className="text-2xl font-semibold text-gray-700">今天有什么可以帮到你？</h2>
+                  </div>
+                  
+                  <div className="w-full max-w-2xl px-4 animate-in slide-in-from-bottom-4 duration-700">
+                      {renderInputBox()}
+                      <div className="text-center mt-4">
+                          <p className="text-xs text-gray-400">
+                              AI 生成的内容可能不准确，请核对重要信息。
+                          </p>
+                      </div>
+                  </div>
+              </div>
+          ) : (
+              // === Chat View ===
+              <div className="flex-1 flex flex-col relative max-w-4xl mx-auto w-full h-full">
+                  {/* Header */}
+                  <div className="flex items-center p-4 border-b border-gray-100 md:hidden">
+                      <span className="font-semibold text-gray-700">金铲铲智能助手</span>
+                  </div>
+
+                  {/* Messages */}
+                  <ScrollArea className="flex-1 p-4" ref={scrollAreaRef}>
+                  <div className="space-y-6 pb-4">
+                      {messages.map((message) => (
+                      <MessageBubble key={message.id} message={message} />
+                      ))}
+                      {isLoading && (
+                      <div className="flex gap-4 justify-start">
+                          <Avatar className="w-10 h-10 border border-gray-200 bg-white shrink-0 mt-1">
+                              <AvatarImage src="/images/penguin.png" alt="AI" />
+                              {/* <AvatarFallback>AI</AvatarFallback> */}
+                          </Avatar>
+                          <div className="bg-gray-100 px-4 py-3 rounded-2xl rounded-bl-sm flex items-center">
+                              <div className="flex space-x-1">
+                                  <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: '0ms' }}></div>
+                                  <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: '150ms' }}></div>
+                                  <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: '300ms' }}></div>
+                              </div>
+                          </div>
+                      </div>
+                      )}
+                  </div>
+                  </ScrollArea>
+
+                  {/* Input Area */}
+                  <div className="p-4 bg-white">
+                      <div className="max-w-3xl mx-auto">
+                          {renderInputBox()}
+                          <div className="text-center mt-2">
+                              <p className="text-xs text-gray-400">
+                                  AI 生成的内容可能不准确，请核对重要信息。
+                              </p>
+                          </div>
+                      </div>
+                  </div>
+              </div>
+          )
+        ) : activeView === 'hexes' ? (
+           <HexesInterface />
+        ) : activeView === 'items' ? (
+           <div className="flex items-center justify-center h-full text-gray-400">装备图鉴开发中...</div>
+        ) : (
+           <div className="flex items-center justify-center h-full text-gray-400">弈子图鉴开发中...</div>
+        )}
+      </div>
+
+      {/* Right Sidebar */}
+      <div className="w-[72px] border-l bg-white flex flex-col items-center py-6 gap-4 shrink-0 z-30 shadow-[-1px_0_10px_rgba(0,0,0,0.05)]">
+        <NavButton 
+          icon={<MessageSquare size={24} />} 
+          label="AI问答" 
+          isActive={activeView === 'chat'} 
+          onClick={() => setActiveView('chat')} 
+        />
+        <NavButton 
+          icon={<Hexagon size={24} />} 
+          label="海克斯" 
+          isActive={activeView === 'hexes'} 
+          onClick={() => setActiveView('hexes')} 
+        />
+        <NavButton 
+          icon={<Box size={24} />} 
+          label="装备" 
+          isActive={activeView === 'items'} 
+          onClick={() => setActiveView('items')} 
+        />
+        <NavButton 
+          icon={<User size={24} />} 
+          label="弈子" 
+          isActive={activeView === 'champions'} 
+          onClick={() => setActiveView('champions')} 
+        />
       </div>
     </div>
 
@@ -554,5 +597,38 @@ function MessageBubble({ message }: { message: Message }) {
          </Avatar>
       )}
     </div>
+  );
+}
+
+
+interface NavButtonProps {
+  icon: React.ReactNode;
+  label: string;
+  isActive: boolean;
+  onClick: () => void;
+}
+
+function NavButton({ icon, label, isActive, onClick }: NavButtonProps) {
+  return (
+    <button
+      onClick={onClick}
+      className={`flex flex-col items-center gap-1 p-2 rounded-lg transition-all duration-200 group relative ${
+        isActive 
+          ? "text-blue-600 bg-blue-50" 
+          : "text-gray-400 hover:text-gray-600 hover:bg-gray-100"
+      }`}
+    >
+      <div className={`transition-transform duration-200 ${isActive ? "scale-110" : "group-hover:scale-105"}`}>
+        {icon}
+      </div>
+      <span className="text-[10px] font-medium">{label}</span>
+      
+      {isActive && (
+        <motion.div 
+          layoutId="activeNavIndicator"
+          className="absolute -right-[1px] top-2 bottom-2 w-[3px] bg-blue-600 rounded-l-full"
+        />
+      )}
+    </button>
   );
 }
