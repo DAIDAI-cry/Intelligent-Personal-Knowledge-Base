@@ -16,10 +16,15 @@ import {
   PanelLeftOpen, 
   MoreHorizontal, 
   Pencil, 
-  Pin 
+  Pin,
+  Copy,
+  Check,
+  LogOut
 } from "lucide-react";
 import { motion } from "framer-motion";
 import { toast } from "sonner";
+import { MarkdownRenderer } from "./MarkdownRenderer";
+import { useRouter } from "next/navigation";
 import {
   Dialog,
   DialogContent,
@@ -42,13 +47,7 @@ interface Conversation {
 }
 
 export default function ChatInterface() {
-  const [messages, setMessages] = useState<Message[]>([
-    {
-      id: "1",
-      role: "assistant",
-      content: "你好！我是金铲铲智能助手。有什么我可以帮你的吗？比如询问当前赛季的强势阵容。",
-    },
-  ]);
+  const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [conversations, setConversations] = useState<Conversation[]>([]);
@@ -62,6 +61,7 @@ export default function ChatInterface() {
   const [newTitle, setNewTitle] = useState("");
 
   const scrollAreaRef = useRef<HTMLDivElement>(null);
+  const router = useRouter();
 
   const handleRenameClick = (e: React.MouseEvent, conv: Conversation) => {
     e.stopPropagation();
@@ -143,15 +143,28 @@ export default function ChatInterface() {
     }
   };
 
+  const handleLogout = async () => {
+    try {
+      const token = localStorage.getItem("accessToken");
+      if (token) {
+        await axios.post("http://localhost:8000/logout/", {}, {
+          headers: { Authorization: `Bearer ${token}` }
+        });
+      }
+    } catch (error) {
+      console.error("Logout error:", error);
+    } finally {
+      localStorage.removeItem("accessToken");
+      localStorage.removeItem("refreshToken");
+      localStorage.removeItem("username");
+      toast.success("已退出登录");
+      router.push("/login");
+    }
+  };
+
   const handleNewChat = () => {
     setConversationId(null);
-    setMessages([
-      {
-        id: "1",
-        role: "assistant",
-        content: "你好！我是金铲铲智能助手。有什么我可以帮你的吗？比如询问当前赛季的强势阵容。",
-      },
-    ]);
+    setMessages([]);
   };
 
   useEffect(() => {
@@ -250,13 +263,37 @@ export default function ChatInterface() {
     }
   }, [messages]);
 
+  const renderInputBox = () => (
+    <div className="relative flex items-center w-full bg-white border border-gray-300 rounded-full shadow-sm focus-within:ring-2 focus-within:ring-blue-100 focus-within:border-blue-400 transition-all">
+      <Button variant="ghost" size="icon" className="ml-2 text-gray-400 hover:text-gray-600 rounded-full">
+          <Plus size={20} />
+      </Button>
+      <Input
+        value={input}
+        onChange={(e) => setInput(e.target.value)}
+        onKeyDown={(e) => e.key === "Enter" && !e.shiftKey && handleSend()}
+        placeholder="给金铲铲智能助手发送消息"
+        className="flex-1 border-none shadow-none focus-visible:ring-0 bg-transparent py-4 px-4 text-base h-auto"
+      />
+      <Button 
+          onClick={handleSend} 
+          disabled={!input.trim() || isLoading}
+          size="icon"
+          className={`mr-2 rounded-full transition-all ${input.trim() ? 'bg-black text-white hover:bg-gray-800' : 'bg-gray-200 text-gray-400 hover:bg-gray-200'}`}
+      >
+        <Send size={18} />
+      </Button>
+    </div>
+  );
+
   return (
-    <div className="flex h-[calc(100vh-64px)] bg-white text-gray-900 font-sans">
+    <>
+    <div className="flex h-screen bg-white text-gray-900 font-sans">
       {/* Sidebar (Optional, can be hidden on small screens) */}
       <div 
-        className={`${isSidebarOpen ? 'w-[260px] border-r' : 'w-0 border-none'} hidden md:flex flex-col bg-gray-50 border-gray-200 transition-all duration-300 ease-in-out overflow-hidden`}
+        className={`${isSidebarOpen ? 'w-[260px] border-r' : 'w-0 border-none'} shrink-0 hidden md:flex flex-col bg-gray-50 border-gray-200 transition-all duration-300 ease-in-out overflow-hidden`}
       >
-        <div className="w-[260px] flex flex-col h-full">
+        <div className="w-full flex flex-col h-full">
         <div className="p-4">
           <Button 
             variant="outline" 
@@ -273,21 +310,20 @@ export default function ChatInterface() {
               <div
                 key={conv.id}
                 onClick={() => loadConversation(conv.id)}
-                className={`group relative px-3 py-2 text-sm rounded-md cursor-pointer flex items-center justify-between gap-2 ${
+                className={`group relative px-2 py-2 text-sm rounded-md cursor-pointer grid grid-cols-[minmax(0,1fr)_auto] items-center gap-2 w-full ${
                   conversationId === conv.id 
                     ? "bg-gray-200 text-gray-900 font-medium" 
                     : "text-gray-500 hover:bg-gray-100"
                 }`}
               >
-                <div className="flex items-center gap-2 truncate overflow-hidden">
+                <div className="flex items-center gap-2 overflow-hidden">
                   {conv.isMarked ? <Pin size={14} className="shrink-0 text-blue-500 fill-blue-500" /> : <MessageSquare size={14} className="shrink-0"/>}
                   <span className="truncate">{conv.title}</span>
                 </div>
                 
-                <div 
-                  role="button"
-                  className={`p-1 rounded-sm hover:bg-gray-300 transition-all ${
-                    conversationId === conv.id || activeMenuId === conv.id ? "opacity-100" : "opacity-0 group-hover:opacity-100"
+                <button 
+                  className={`shrink-0 w-7 h-7 flex items-center justify-center rounded hover:bg-gray-300 transition-colors z-10 ${
+                     conversationId === conv.id ? "text-gray-700" : "text-gray-400 hover:text-gray-700"
                   }`}
                   onClick={(e) => {
                     e.stopPropagation();
@@ -295,7 +331,7 @@ export default function ChatInterface() {
                   }}
                 >
                   <MoreHorizontal size={16} />
-                </div>
+                </button>
 
                 {activeMenuId === conv.id && (
                   <>
@@ -333,7 +369,25 @@ export default function ChatInterface() {
           </div>
         </ScrollArea>
         <div className="p-4 border-t border-gray-200">
-           {/* User profile or settings */}
+           <div className="flex items-center justify-between">
+              <div className="flex items-center gap-2">
+                  <Avatar className="w-8 h-8 border border-gray-200 bg-gray-100">
+                      <AvatarFallback><User size={16}/></AvatarFallback>
+                  </Avatar>
+                  <span className="text-sm font-medium text-gray-700 truncate max-w-[120px]">
+                      {typeof window !== 'undefined' ? localStorage.getItem("username") || "用户" : "用户"}
+                  </span>
+              </div>
+              <Button 
+                  variant="ghost" 
+                  size="icon" 
+                  className="text-gray-500 hover:text-red-600 hover:bg-red-50"
+                  onClick={handleLogout}
+                  title="退出登录"
+              >
+                  <LogOut size={18} />
+              </Button>
+           </div>
         </div>
         </div>
       </div>
@@ -354,93 +408,68 @@ export default function ChatInterface() {
             </Button>
         </div>
 
-        {/* Chat Container */}
-        <div className="flex-1 flex flex-col relative max-w-4xl mx-auto w-full h-full">
-        {/* Header */}
-        <div className="flex items-center p-4 border-b border-gray-100 md:hidden">
-             <span className="font-semibold text-gray-700">金铲铲智能助手</span>
-        </div>
-
-        {/* Messages */}
-        <ScrollArea className="flex-1 p-4" ref={scrollAreaRef}>
-          <div className="space-y-6 pb-4">
-            {messages.map((message) => (
-              <div
-                key={message.id}
-                className={`flex gap-4 items-center ${
-                  message.role === "user" ? "justify-end" : "justify-start"
-                }`}
-              >
-                {message.role === "assistant" && (
-                  <Avatar className="w-18 h-18 border border-gray-200 bg-white shrink-0">
-                    <AvatarImage src="/images/penguin.png" alt="AI" />
-                    {/* <AvatarFallback>AI</AvatarFallback> */}
-                  </Avatar>
-                )}
+        {messages.length === 0 ? (
+            // === Welcome View ===
+            <div className="flex-1 flex flex-col items-center justify-center p-4 w-full">
+                <div className="mb-8 flex items-center gap-3 animate-in fade-in zoom-in duration-500">
+                    <img src="/images/jcc_white.png" alt="Logo" className="w-10 h-10 object-contain" />
+                    <h2 className="text-2xl font-semibold text-gray-700">今天有什么可以帮到你？</h2>
+                </div>
                 
-                <div
-                  className={`relative max-w-[80%] px-4 py-3 rounded-2xl text-sm leading-relaxed ${
-                    message.role === "user"
-                      ? "bg-blue-600 text-white rounded-br-sm"
-                      : "bg-gray-100 text-gray-800 rounded-bl-sm"
-                  }`}
-                >
-                  {message.content}
+                <div className="w-full max-w-2xl px-4 animate-in slide-in-from-bottom-4 duration-700">
+                    {renderInputBox()}
+                    <div className="text-center mt-4">
+                        <p className="text-xs text-gray-400">
+                            AI 生成的内容可能不准确，请核对重要信息。
+                        </p>
+                    </div>
+                </div>
+            </div>
+        ) : (
+            // === Chat View ===
+            <div className="flex-1 flex flex-col relative max-w-4xl mx-auto w-full h-full">
+                {/* Header */}
+                <div className="flex items-center p-4 border-b border-gray-100 md:hidden">
+                    <span className="font-semibold text-gray-700">金铲铲智能助手</span>
                 </div>
 
-                {message.role === "user" && (
-                   <Avatar className="w-18 h-18 border border-gray-200 bg-gray-100 shrink-0">
-                      <AvatarFallback><User size={16}/></AvatarFallback>
-                   </Avatar>
-                )}
-              </div>
-            ))}
-            {isLoading && (
-              <div className="flex gap-4 justify-start">
-                 <Avatar className="w-18 h-18 border border-gray-200 bg-white shrink-0">
-                    <AvatarImage src="/images/penguin.png" alt="AI" />
-                    {/* <AvatarFallback>AI</AvatarFallback> */}
-                  </Avatar>
-                  <div className="bg-gray-100 px-4 py-3 rounded-2xl rounded-bl-sm flex items-center">
-                    <div className="flex space-x-1">
-                        <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: '0ms' }}></div>
-                        <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: '150ms' }}></div>
-                        <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: '300ms' }}></div>
+                {/* Messages */}
+                <ScrollArea className="flex-1 p-4" ref={scrollAreaRef}>
+                <div className="space-y-6 pb-4">
+                    {messages.map((message) => (
+                    <MessageBubble key={message.id} message={message} />
+                    ))}
+                    {isLoading && (
+                    <div className="flex gap-4 justify-start">
+                        <Avatar className="w-10 h-10 border border-gray-200 bg-white shrink-0 mt-1">
+                            <AvatarImage src="/images/penguin.png" alt="AI" />
+                            {/* <AvatarFallback>AI</AvatarFallback> */}
+                        </Avatar>
+                        <div className="bg-gray-100 px-4 py-3 rounded-2xl rounded-bl-sm flex items-center">
+                            <div className="flex space-x-1">
+                                <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: '0ms' }}></div>
+                                <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: '150ms' }}></div>
+                                <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: '300ms' }}></div>
+                            </div>
+                        </div>
                     </div>
-                  </div>
-              </div>
-            )}
-          </div>
-        </ScrollArea>
+                    )}
+                </div>
+                </ScrollArea>
 
-        {/* Input Area */}
-        <div className="p-4 bg-white">
-          <div className="relative flex items-center max-w-3xl mx-auto bg-white border border-gray-300 rounded-full shadow-sm focus-within:ring-2 focus-within:ring-blue-100 focus-within:border-blue-400 transition-all">
-            <Button variant="ghost" size="icon" className="ml-2 text-gray-400 hover:text-gray-600 rounded-full">
-                <Plus size={20} />
-            </Button>
-            <Input
-              value={input}
-              onChange={(e) => setInput(e.target.value)}
-              onKeyDown={(e) => e.key === "Enter" && !e.shiftKey && handleSend()}
-              placeholder="给金铲铲智能助手发送消息"
-              className="flex-1 border-none shadow-none focus-visible:ring-0 bg-transparent py-6 px-4 text-base"
-            />
-            <Button 
-                onClick={handleSend} 
-                disabled={!input.trim() || isLoading}
-                size="icon"
-                className={`mr-2 rounded-full transition-all ${input.trim() ? 'bg-black text-white hover:bg-gray-800' : 'bg-gray-200 text-gray-400 hover:bg-gray-200'}`}
-            >
-              <Send size={18} />
-            </Button>
-          </div>
-          <div className="text-center mt-2">
-             <p className="text-xs text-gray-400">
-                AI 生成的内容可能不准确，请核对重要信息。
-             </p>
-          </div>
-        </div>
+                {/* Input Area */}
+                <div className="p-4 bg-white">
+                    <div className="max-w-3xl mx-auto">
+                        {renderInputBox()}
+                        <div className="text-center mt-2">
+                            <p className="text-xs text-gray-400">
+                                AI 生成的内容可能不准确，请核对重要信息。
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        )}
       </div>
     </div>
 
@@ -463,7 +492,67 @@ export default function ChatInterface() {
           </DialogFooter>
         </DialogContent>
       </Dialog>
+    </>
+  );
+}
 
+function MessageBubble({ message }: { message: Message }) {
+  const [isCopied, setIsCopied] = useState(false);
+
+  const handleCopy = () => {
+    navigator.clipboard.writeText(message.content);
+    setIsCopied(true);
+    toast.success("已复制");
+    setTimeout(() => setIsCopied(false), 2000);
+  };
+
+  return (
+    <div
+      className={`flex gap-4 items-start ${
+        message.role === "user" ? "justify-end" : "justify-start"
+      }`}
+    >
+      {message.role === "assistant" && (
+        <Avatar className="w-10 h-10 border border-gray-200 bg-white shrink-0 mt-1">
+          <AvatarImage src="/images/penguin.png" alt="AI" />
+          <AvatarFallback>AI</AvatarFallback>
+        </Avatar>
+      )}
+      
+      <div className={`group relative max-w-[80%] ${message.role === "user" ? "text-right" : "text-left"}`}>
+        <div
+          className={`relative px-4 py-3 rounded-2xl text-sm leading-relaxed text-left inline-block ${
+            message.role === "user"
+              ? "bg-blue-600 text-white rounded-br-sm"
+              : "bg-gray-100 text-gray-800 rounded-bl-sm"
+          }`}
+        >
+          {message.role === "assistant" ? (
+             <MarkdownRenderer content={message.content} />
+          ) : (
+             <div className="whitespace-pre-wrap">{message.content}</div>
+          )}
+        </div>
+
+        {/* Copy Button */}
+        <div className={`absolute top-2 ${message.role === "user" ? "-left-8" : "-right-8"} opacity-0 group-hover:opacity-100 transition-opacity`}>
+            <Button
+                variant="ghost"
+                size="icon"
+                className="h-6 w-6 rounded-full bg-white hover:bg-gray-100 border border-gray-200 shadow-sm"
+                onClick={handleCopy}
+                title="复制消息"
+            >
+                {isCopied ? <Check size={12} className="text-green-600" /> : <Copy size={12} className="text-gray-500" />}
+            </Button>
+        </div>
+      </div>
+
+      {message.role === "user" && (
+         <Avatar className="w-10 h-10 border border-gray-200 bg-gray-100 shrink-0 mt-1">
+            <AvatarFallback><User size={16}/></AvatarFallback>
+         </Avatar>
+      )}
     </div>
   );
 }

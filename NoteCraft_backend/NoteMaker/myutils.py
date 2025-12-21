@@ -23,7 +23,7 @@ else:
 OR_API_KEY=os.getenv("OPEN_ROUTER_API_KEY")
 try:
     pc = Pinecone(api_key=os.getenv("PINECONE_API_KEY"))
-    index = pc.Index("notecraft")
+    index = pc.Index("teamfight-tactics-knowledges")
 except Exception as e:
     print(f"Warning: Pinecone initialization failed: {e}")
     index = None
@@ -38,13 +38,13 @@ topics_query:str="Generate key gameplay aspects for Teamfight Tactics (Golden Sp
 
 def request_OpenRouter(query:str)->str:
     response = requests.post(
-        url="https://openrouter.ai/api/v1/chat/completions",
+        url="https://api.deepseek.com/chat/completions",
         headers={
             "Authorization": f"Bearer {OR_API_KEY}",
             "Content-Type": "application/json",
         },
         data=json.dumps({
-            "model": "qwen/qwq-32b:free",
+            "model": "deepseek-chat",
             "messages": [
             {
                 "role": "user",

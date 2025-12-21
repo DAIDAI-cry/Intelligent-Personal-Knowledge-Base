@@ -90,7 +90,7 @@ function LayoutContent({ children }: { children: React.ReactNode }) {
   return (
     <ThemeProvider attribute="class" defaultTheme="light" enableSystem>
       <div className="flex min-h-screen flex-col">
-        <header className="sticky top-0 z-40 border-b bg-background">
+        {/* <header className="sticky top-0 z-40 border-b bg-background">
           <div className="container flex h-16 items-center justify-between py-4">
             <div className="flex items-center gap-2">
             </div>
@@ -101,7 +101,7 @@ function LayoutContent({ children }: { children: React.ReactNode }) {
               </div>
             )}
           </div>
-        </header>
+        </header> */}
         <main className="flex-1 bg-muted/40 full-page-bg">
         <Toaster position="top-center"/>
           {children}

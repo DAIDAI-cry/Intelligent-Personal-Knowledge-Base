@@ -10,11 +10,12 @@ from pinecone import Pinecone
 from django.conf import settings
 #from langchain.schema import HumanMessage, SystemMessage
 from langchain_core.messages import HumanMessage, SystemMessage
+from .prompts import EXPANSION_PROMPT, SYSTEM_PROMPT
 load_dotenv()
 
 # Initialize Pinecone
 PINECONE_API_KEY = os.getenv("PINECONE_API_KEY")
-INDEX_NAME = "notecraft"
+INDEX_NAME = "teamfight-tactics-knowledges"
 
 if not PINECONE_API_KEY:
     print("Warning: PINECONE_API_KEY not found.")
@@ -123,54 +124,89 @@ def query_ai(query: str):
     try:
         if not pc:
             raise ValueError("Pinecone not initialized")
-            
-        # 1. Embed Query
-        query_embedding = pc.inference.embed(
-            model="llama-text-embed-v2",
-            inputs=[query],
-            parameters={"input_type": "query"}
-        )[0]['values']
-        
-        # 2. Search Pinecone
-        index = get_index()
-        results = index.query(
-            vector=query_embedding,
-            top_k=3,
-            include_metadata=True
-            # namespace="" # Use default namespace
-        )
-        
-        context_text = ""
-        sources = []
-        if results.matches:
-            for match in results.matches:
-                if match.metadata and "text" in match.metadata:
-                    context_text += match.metadata["text"] + "\n\n"
-                    sources.append(match.metadata.get("source", "unknown"))
-        
-        if not context_text:
-            context_text = "No relevant context found in the knowledge base."
 
-        # 3. Initialize LLM with OpenRouter
+        # Initialize LLM first (needed for query expansion)
         open_router_key = os.getenv("OPEN_ROUTER_API_KEY")
         if not open_router_key:
             raise ValueError("OPEN_ROUTER_API_KEY not found in environment variables")
 
-        print(f"Initializing ChatOpenAI with model: meta-llama/llama-3.3-70b-instruct:free")
+        print(f"Initializing ChatOpenAI with model: deepseek-chat")
         
         llm = ChatOpenAI(
-            model="meta-llama/llama-3.3-70b-instruct:free", 
+            model="deepseek-chat", 
             api_key=open_router_key,
-            base_url="https://openrouter.ai/api/v1",
+            base_url="https://api.deepseek.com",
             temperature=0
         )
 
-        # 4. Construct Prompt
-        system_prompt = """
-        你是一个《金铲铲之战》（Teamfight Tactics）的高手教练和智能助手。
-        请根据下方的【参考资料】回答用户的问题。
-        如果资料里没有提到，就诚实地说不知道，不要编造羁绊或装备数据。
-        """
+        # 1. Query Expansion / Keyword Extraction
+        # Generate search queries based on user input to capture all entities
+        expansion_prompt = EXPANSION_PROMPT
+        
+        expansion_messages = [
+            SystemMessage(content=expansion_prompt),
+            HumanMessage(content=query)
+        ]
+        
+        search_queries = []
+        try:
+            # Use a separate try-except for expansion to not fail the whole request
+            expansion_response = llm.invoke(expansion_messages)
+            search_queries = [q.strip() for q in expansion_response.content.split('\n') if q.strip()]
+            print(f"Generated search queries: {search_queries}")
+        except Exception as e:
+            print(f"Query expansion failed: {e}")
+
+        # Always include the original query as a fallback/supplement
+        if query not in search_queries:
+            search_queries.append(query)
+            
+        # 2. Search Pinecone for each query
+        index = get_index()
+        seen_ids = set()
+        all_matches = []
+        
+        for q in search_queries:
+            try:
+                # Embed Query
+                query_embedding = pc.inference.embed(
+                    model="llama-text-embed-v2",
+                    inputs=[q],
+                    parameters={"input_type": "query"}
+                )[0]['values']
+                
+                # Search Pinecone
+                results = index.query(
+                    vector=query_embedding,
+                    top_k=1000, # Increased to 20 to capture lists of items (e.g. "all 5 cost units")
+                    include_metadata=True
+                )
+                
+                if results.matches:
+                    for match in results.matches:
+                        if match.id not in seen_ids:
+                            seen_ids.add(match.id)
+                            all_matches.append(match)
+            except Exception as e:
+                print(f"Error searching for query '{q}': {e}")
+
+        # Sort by score and take top K
+        # We do NOT sort and slice globally anymore to prevent one topic dominating the results.
+        # We keep all unique matches from all sub-queries.
+        final_matches = all_matches
+        
+        context_text = ""
+        sources = []
+        for match in final_matches:
+            if match.metadata and "text" in match.metadata:
+                context_text += match.metadata["text"] + "\n\n"
+                sources.append(match.metadata.get("source", "unknown"))
+        
+        if not context_text:
+            context_text = "No relevant context found in the knowledge base."
+
+        # 3. Construct Prompt for Final Answer
+        system_prompt = SYSTEM_PROMPT
         
         user_prompt = f"""
         【参考资料】：
@@ -184,7 +220,7 @@ def query_ai(query: str):
             HumanMessage(content=user_prompt)
         ]
         
-        # 5. Invoke LLM
+        # 4. Invoke LLM
         response = llm.invoke(messages)
         
         return {
