@@ -1,6 +1,6 @@
 import React, { useState, useMemo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import hexData from '../data/hex_vectors.json';
+import hexData from '../hexdata/hexes.json';
 
 interface Hex {
   name: string;
