@@ -28,6 +28,7 @@ import { motion } from "framer-motion";
 import { toast } from "sonner";
 import { MarkdownRenderer } from "./MarkdownRenderer";
 import HexesInterface from "./HexesInterface";
+import ItemsInterface from "./ItemsInterface";
 import { useRouter } from "next/navigation";
 import {
   Dialog,
@@ -57,7 +58,7 @@ export default function ChatInterface() {
   const [conversations, setConversations] = useState<Conversation[]>([]);
   const [conversationId, setConversationId] = useState<number | null>(null);
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
-  const [activeView, setActiveView] = useState<'chat' | 'hexes' | 'items' | 'champions'>('chat');
+  const [activeView, setActiveView] = useState<'chat' | 'hexes' | 'items'>('chat');
   
   // Menu & Rename State
   const [activeMenuId, setActiveMenuId] = useState<number | null>(null);
@@ -480,10 +481,8 @@ export default function ChatInterface() {
           )
         ) : activeView === 'hexes' ? (
            <HexesInterface />
-        ) : activeView === 'items' ? (
-           <div className="flex items-center justify-center h-full text-gray-400">装备图鉴开发中...</div>
         ) : (
-           <div className="flex items-center justify-center h-full text-gray-400">弈子图鉴开发中...</div>
+           <ItemsInterface />
         )}
       </div>
 
@@ -506,12 +505,6 @@ export default function ChatInterface() {
           label="装备" 
           isActive={activeView === 'items'} 
           onClick={() => setActiveView('items')} 
-        />
-        <NavButton 
-          icon={<User size={24} />} 
-          label="弈子" 
-          isActive={activeView === 'champions'} 
-          onClick={() => setActiveView('champions')} 
         />
       </div>
     </div>
