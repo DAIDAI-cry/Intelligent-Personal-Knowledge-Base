@@ -1,0 +1,1397 @@
+{
+    "vectors": [
+        {
+            "name": "暴风之剑",
+            "picture": "https://game.gtimg.cn/images/lol/act/jkzlk/gamedata/equip/1001.png",
+            "basicDesc": "+10物理加成",
+            "desc": "",
+            "type": "基础装备"
+        },
+        {
+            "name": "反曲之弓",
+            "picture": "https://game.gtimg.cn/images/lol/act/jkzlk/gamedata/equip/1002.png",
+            "basicDesc": "+10%攻击速度",
+            "desc": "",
+            "type": "基础装备"
+        },
+        {
+            "name": "无用大棒",
+            "picture": "https://game.gtimg.cn/images/lol/act/jkzlk/gamedata/equip/1003.png",
+            "basicDesc": "+10法术加成",
+            "desc": "",
+            "type": "基础装备"
+        },
+        {
+            "name": "女神之泪",
+            "picture": "https://game.gtimg.cn/images/lol/act/jkzlk/gamedata/equip/1004.png",
+            "basicDesc": "+1法力回复",
+            "desc": "",
+            "type": "基础装备"
+        },
+        {
+            "name": "锁子甲",
+            "picture": "https://game.gtimg.cn/images/lol/act/jkzlk/gamedata/equip/1005.png",
+            "basicDesc": "+20护甲",
+            "desc": "",
+            "type": "基础装备"
+        },
+        {
+            "name": "负极斗篷",
+            "picture": "https://game.gtimg.cn/images/lol/act/jkzlk/gamedata/equip/1006.png",
+            "basicDesc": "+20魔法抗性",
+            "desc": "",
+            "type": "基础装备"
+        },
+        {
+            "name": "巨人腰带",
+            "picture": "https://game.gtimg.cn/images/lol/act/jkzlk/gamedata/equip/1007.png",
+            "basicDesc": "+150生命上限",
+            "desc": "",
+            "type": "基础装备"
+        },
+        {
+            "name": "拳套",
+            "picture": "https://game.gtimg.cn/images/lol/act/jkzlk/gamedata/equip/1009.png",
+            "basicDesc": "+20%暴击率",
+            "desc": "",
+            "type": "基础装备"
+        },
+        {
+            "name": "金铲铲",
+            "picture": "https://game.gtimg.cn/images/lol/act/jkzlk/gamedata/equip/1008.png",
+            "basicDesc": "",
+            "desc": "它必须做点什么…",
+            "type": "基础装备"
+        },
+        
+        {
+            "name": "金锅锅",
+            "picture": "https://game.gtimg.cn/images/lol/act/jkzlk/gamedata/equip/frying_pan.png",
+            "basicDesc": "",
+            "desc": ".……不然它怎么会在这里？",
+            "type": "基础装备"
+        },
+        {
+            "name": "无尽之刃",
+            "picture": "https://game.gtimg.cn/images/lol/act/jkzlk/gamedata/equip/2001.png",
+            "basicDesc": "+35物理加成 +35%暴击率",
+            "desc": "技能可以暴击。  如果携带者的技能已经可以暴击了，则转而提供10%暴击伤害。",
+            "type": "成型装备",
+            "synthesis": "暴风之剑+拳套=无尽之刃"
+        },
+        {
+            "name": "海克斯科技枪刃",
+            "picture": "https://game.gtimg.cn/images/lol/act/jkzlk/gamedata/equip/2003.png",
+            "basicDesc": "+20物理加成 +20法术加成 +15%全能吸血 +1法力回复",
+            "desc": "为生命值百分比最低的友军提供相当于20%造成伤害值的治疗。",
+            "type": "成型装备",
+            "synthesis": "暴风之剑+无用大棒=海克斯科技枪刃"
+        },
+        {
+            "name": "朔极之矛",
+            "picture": "https://game.gtimg.cn/images/lol/act/jkzlk/gamedata/equip/2004.png",
+            "basicDesc": "+15物理加成 +15法术加成 +1法力回复",
+            "desc": "每次普攻提供5额外法力值。",
+            "type": "成型装备",
+            "synthesis": "暴风之剑+女神之泪=朔极之矛"
+        },
+        {
+            "name": "夜之锋刃",
+            "picture": "https://game.gtimg.cn/images/lol/act/jkzlk/gamedata/equip/2005.png",
+            "basicDesc": "+10物理加成 +10法术加成 +20护甲 +15%攻击速度",
+            "desc": "救主灵刃：在60%生命值时，短暂变为不可被选取状态并摆脱负面效果。",
+            "type": "成型装备",
+            "synthesis": "暴风之剑+锁子甲=夜之锋刃"
+        },
+        {
+            "name": "汲取剑",
+            "picture": "https://game.gtimg.cn/images/lol/act/jkzlk/gamedata/equip/2006.png",
+            "basicDesc": "+15物理加成 +15法术加成 +20魔法抗性 +20%全能吸血",
+            "desc": "每场战斗仅触发1次：在40%生命值时，获得一个护盾，护盾值相当于携带者25%的最大生命值，至多持续5秒。",
+            "type": "成型装备",
+            "synthesis": "暴风之剑+负极斗篷=汲取剑"
+        },
+        {
+            "name": "斯特拉克的挑战护手",
+            "picture": "https://game.gtimg.cn/images/lol/act/jkzlk/gamedata/equip/steraksgage.png",
+            "basicDesc": "+300生命上限 +40物理加成",
+            "desc": "救主灵刃：在60%生命值时，获得相当于携带者50%最大生命值的护盾值，在4秒内快速衰减。",
+            "type": "成型装备",
+            "synthesis": "暴风之剑+巨人腰带=斯特拉克的挑战护手"
+        },
+        {
+            "name": "红霸符",
+            "picture": "https://game.gtimg.cn/images/lol/act/jkzlk/gamedata/equip/2009.png",
+            "basicDesc": "+45%攻击速度 +3%伤害增幅",
+            "desc": "攻击和技能的伤害对敌人们造成持续5秒的1%灼烧效果和33%重伤效果。  灼烧：每秒造成目标一部分最大生命值的真实伤害 重伤：降低受到的治疗效果",
+            "type": "成型装备",
+            "synthesis": "反曲之弓+反曲之弓=红霸符"
+        },
+        {
+            "name": "鬼索的狂暴之刃",
+            "picture": "https://game.gtimg.cn/images/lol/act/jkzlk/gamedata/equip/2010.png",
+            "basicDesc": "+10%攻击速度 +10法术加成",
+            "desc": "每秒获得7%可叠加的攻击速度。",
+            "type": "成型装备",
+            "synthesis": "反曲之弓+无用大棒=鬼索的狂暴之刃"
+        },
+        {
+            "name": "虚空之杖",
+            "picture": "https://game.gtimg.cn/images/lol/act/jkzlk/gamedata/equip/voidstaff.png",
+            "basicDesc": "+35法术加成 +15%攻击速度 +1法力回复",
+            "desc": "攻击和技能伤害都会对目标施加持续5秒的30%魔抗击碎。这个效果不会叠加。  魔抗击碎：降低魔法抗性",
+            "type": "成型装备",
+            "synthesis": "反曲之弓+女神之泪=虚空之杖"
+        },
+        {
+            "name": "泰坦的坚决",
+            "picture": "https://game.gtimg.cn/images/lol/act/jkzlk/gamedata/equip/2052.png",
+            "basicDesc": "+20护甲 +10%攻击速度",
+            "desc": "在攻击或承受伤害时获得2%物理加成和2%法术加成，至多可叠加25次。  在叠满层数后，获得10%伤害增幅，并获得控制免疫。",
+            "type": "成型装备",
+            "synthesis": "反曲之弓+锁子甲=泰坦的坚决"
+        },
+        {
+            "name": "海妖之怒",
+            "picture": "https://game.gtimg.cn/images/lol/act/jkzlk/gamedata/equip/krakensfury.png",
+            "basicDesc": "+10物理加成 +20魔法抗性 +10%攻击速度",
+            "desc": "攻击提供3.5%可叠加的物理加成，至多至15次攻击。在15次攻击后，获得30%攻击速度。",
+            "type": "成型装备",
+            "synthesis": "反曲之弓+负极斗篷=海妖之怒"
+        },
+        {
+            "name": "纳什之牙",
+            "picture": "https://game.gtimg.cn/images/lol/act/jkzlk/gamedata/equip/nashorstooth.png",
+            "basicDesc": "+150生命上限 +15法术加成 +10%攻击速度 +20%暴击率",
+            "desc": "每次普攻提供2额外法力值，如果暴击则提供额外的4法力值。",
+            "type": "成型装备",
+            "synthesis": "反曲之弓+巨人腰带=纳什之牙"
+        },
+        {
+            "name": "班克斯的魔法帽",
+            "picture": "https://game.gtimg.cn/images/lol/act/jkzlk/gamedata/equip/2016.png",
+            "basicDesc": "+50法术加成 +15%伤害增幅",
+            "desc": "这顶不起眼的帽子可以帮助你创造，或毁灭，这个世界本身。",
+            "type": "成型装备",
+            "synthesis": "无用大棒+无用大棒=班克斯的魔法帽"
+        },
+        {
+            "name": "大天使之杖",
+            "picture": "https://game.gtimg.cn/images/lol/act/jkzlk/gamedata/equip/2017.png",
+            "basicDesc": "+30法术加成 +1法力回复",
+            "desc": "战斗开始时：在战斗期间，每5秒获得20%法术加成。",
+            "type": "成型装备",
+            "synthesis": "无用大棒+女神之泪=大天使之杖"
+        },
+        {
+            "name": "冕卫",
+            "picture": "https://game.gtimg.cn/images/lol/act/jkzlk/gamedata/equip/crownguard.png",
+            "basicDesc": "+100生命上限 +20法术加成 +20护甲",
+            "desc": "战斗开始时：获得持续8秒的相当于25%最大生命值的护盾值。  在护盾到期时，获得25%法术加成。",
+            "type": "成型装备",
+            "synthesis": "无用大棒+锁子甲=冕卫"
+        },
+        {
+            "name": "离子火花",
+            "picture": "https://game.gtimg.cn/images/lol/act/jkzlk/gamedata/equip/2019.png",
+            "basicDesc": "+250生命上限 +15法术加成 +35魔法抗性",
+            "desc": "对2格内的敌人们施加30%魔抗击碎。在敌人施放一次技能时，对该敌人造成相当于该敌人150%法力值消耗的魔法伤害。 魔抗击碎：降低魔抗值",
+            "type": "成型装备",
+            "synthesis": "无用大棒+负极斗篷=离子火花"
+        },
+        {
+            "name": "莫雷洛秘典",
+            "picture": "https://game.gtimg.cn/images/lol/act/jkzlk/gamedata/equip/2020.png",
+            "basicDesc": "+150生命上限 +20法术加成 +1法力回复",
+            "desc": "攻击和技能的伤害对敌人们造成持续10秒的1%灼烧效果和33%重伤效果。  灼烧：每秒造成目标一部分最大生命值的真实伤害 重伤：降低受到的治疗效果",
+            "type": "成型装备",
+            "synthesis": "无用大棒+巨人腰带=莫雷洛秘典"
+        },
+        {
+            "name": "蓝霸符",
+            "picture": "https://game.gtimg.cn/images/lol/act/jkzlk/gamedata/equip/2222.png",
+            "basicDesc": "+15物理加成 +15法术加成 +5法力回复",
+            "desc": "从所有来源中获得10%额外物理加成和法术加成。",
+            "type": "成型装备",
+            "synthesis": "女神之泪+女神之泪=蓝霸符"
+        },
+        {
+            "name": "圣盾使的誓约",
+            "picture": "https://game.gtimg.cn/images/lol/act/jkzlk/gamedata/equip/2023.png",
+            "basicDesc": "+25护甲 +25魔法抗性 +1法力回复",
+            "desc": "战斗开始时：获得20法力值。  在40%生命值时，获得15法力值和相当于20%最大生命值的护盾值。",
+            "type": "成型装备",
+            "synthesis": "女神之泪+锁子甲=圣盾使的誓约"
+        },
+        {
+            "name": "适应性头盔",
+            "picture": "https://game.gtimg.cn/images/lol/act/jkzlk/gamedata/equip/adaptivehelm.png",
+            "basicDesc": "+20魔法抗性 +3法力回复",
+            "desc": "从所有来源中获得额外的15%法力值。携带者获得基于其角色定位的一个额外加成：  坦克和战士：获得45护甲和魔抗。  其它角色定位：获得10%物理加成和法术加成。",
+            "type": "成型装备",
+            "synthesis": "女神之泪+负极斗篷=适应性头盔"
+        },
+        {
+            "name": "振奋盔甲",
+            "picture": "https://game.gtimg.cn/images/lol/act/jkzlk/gamedata/equip/spiritvisage.png",
+            "basicDesc": "+300生命上限 +10%伤害减免 +2法力回复",
+            "desc": "每秒回复2.5%已损失生命值。",
+            "type": "成型装备",
+            "synthesis": "女神之泪+巨人腰带=振奋盔甲"
+        },
+        {
+            "name": "棘刺背心",
+            "picture": "https://game.gtimg.cn/images/lol/act/jkzlk/gamedata/equip/2054.png",
+            "basicDesc": "+65护甲",
+            "desc": "获得9%最大生命值。  使来自攻击的伤害降低5%。在被任一攻击命中时，对邻格所有敌人造成100魔法伤害。  冷却时间：2秒",
+            "type": "成型装备",
+            "synthesis": "锁子甲+锁子甲=棘刺背心"
+        },
+        {
+            "name": "石像鬼石板甲",
+            "picture": "https://game.gtimg.cn/images/lol/act/jkzlk/gamedata/equip/2248.png",
+            "basicDesc": "+100生命上限 +25护甲 +25魔法抗性",
+            "desc": "每有一个敌人正在以携带者为目标，携带者就会获得10护甲和10魔抗。",
+            "type": "成型装备",
+            "synthesis": "锁子甲+负极斗篷=石像鬼石板甲"
+        },
+        {
+            "name": "日炎斗篷",
+            "picture": "https://game.gtimg.cn/images/lol/act/jkzlk/gamedata/equip/2329.png",
+            "basicDesc": "+150生命上限 +20护甲",
+            "desc": "获得8%最大生命值。  每过2秒，对2格内的一名敌人施加持续10秒的1%灼烧效果和33%重伤效果。  灼烧：每秒造成目标一部分最大生命值的真实伤害 重伤：降低受到的治疗效果",
+            "type": "成型装备",
+            "synthesis": "锁子甲+巨人腰带=日炎斗篷"
+        },
+        {
+            "name": "巨龙之爪",
+            "picture": "https://game.gtimg.cn/images/lol/act/jkzlk/gamedata/equip/2031.png",
+            "basicDesc": "+75魔法抗性",
+            "desc": "获得9%最大生命值。  每2秒治疗2.5%最大生命值。",
+            "type": "成型装备",
+            "synthesis": "负极斗篷+负极斗篷=巨龙之爪"
+        },
+        {
+            "name": "薄暮法袍",
+            "picture": "https://game.gtimg.cn/images/lol/act/jkzlk/gamedata/equip/evenshroud.png",
+            "basicDesc": "+250生命上限 +20魔法抗性",
+            "desc": "2格内的敌人们会被施加30%护甲削减。在战斗的最初15秒获得25护甲和魔抗。  护甲击碎：降低护甲值",
+            "type": "成型装备",
+            "synthesis": "负极斗篷+巨人腰带=薄暮法袍"
+        },
+        {
+            "name": "狂徒铠甲",
+            "picture": "https://game.gtimg.cn/images/lol/act/jkzlk/gamedata/equip/2034.png",
+            "basicDesc": "+500生命上限",
+            "desc": "获得15%最大生命值。",
+            "type": "成型装备",
+            "synthesis": "巨人腰带+巨人腰带=狂徒铠甲"
+        },
+        {
+            "name": "金铲铲冠冕",
+            "picture": "https://game.gtimg.cn/images/lol/act/jkzlk/gamedata/equip/2036.png",
+            "basicDesc": "",
+            "desc": "你的队伍获得+1最大队伍规模。  在你赢下战斗时，有10%几率掉落1金币。  “……某位英雄的心……”",
+            "type": "成型装备",
+            "synthesis": "金铲铲+金铲铲=金铲铲冠冕"
+        },
+        {
+            "name": "最后的轻语",
+            "picture": "https://game.gtimg.cn/images/lol/act/jkzlk/gamedata/equip/2053.png",
+            "basicDesc": "+15物理加成 +20%攻击速度 +20%暴击率",
+            "desc": "来自攻击和技能的伤害会对目标施加持续3秒的30%护甲击碎。这个效果不会叠加。  护甲击碎：降低护甲值",
+            "type": "成型装备",
+            "synthesis": "反曲之弓+拳套=最后的轻语"
+        },
+        {
+            "name": "珠光护手",
+            "picture": "https://game.gtimg.cn/images/lol/act/jkzlk/gamedata/equip/2038.png",
+            "basicDesc": "+35%暴击率 +35法术加成",
+            "desc": "技能可以暴击。  如果携带者的技能已经可以暴击了，则转而提供10%暴击伤害。",
+            "type": "成型装备",
+            "synthesis": "无用大棒+拳套=珠光护手"
+        },
+        {
+            "name": "正义之手",
+            "picture": "https://game.gtimg.cn/images/lol/act/jkzlk/gamedata/equip/2039.png",
+            "basicDesc": "+20%暴击率 +1法力回复",
+            "desc": "获得2个效果： -15%物理加成和15%法术加成。 -12%全能吸血。  生命值高于50%时，物理加成和法术加成翻倍。生命值低于50%时，全能吸血效果翻倍。",
+            "type": "成型装备",
+            "synthesis": "拳套+女神之泪=正义之手"
+        },
+        {
+            "name": "坚定之心",
+            "picture": "https://game.gtimg.cn/images/lol/act/jkzlk/gamedata/equip/nightharvester.png",
+            "basicDesc": "+250生命上限 +20护甲 +20%暴击率",
+            "desc": "获得10%伤害减免。在高于50%生命值时，转而获得18%伤害减免。",
+            "type": "成型装备",
+            "synthesis": "锁子甲+拳套=坚定之心"
+        },
+        {
+            "name": "水银",
+            "picture": "https://game.gtimg.cn/images/lol/act/jkzlk/gamedata/equip/2041.png",
+            "basicDesc": "+20魔法抗性 +15%攻击速度 +20%暴击率",
+            "desc": "战斗开始时：获得持续18秒的控制免疫效果。  每秒获得3%可叠加的攻击速度。",
+            "type": "成型装备",
+            "synthesis": "负极斗篷+拳套=水银"
+        },
+        {
+            "name": "强袭者的链枷",
+            "picture": "https://game.gtimg.cn/images/lol/act/jkzlk/gamedata/equip/strikersflail.png",
+            "basicDesc": "+150生命上限 +10%攻击速度 +20%暴击率 +10%伤害增幅",
+            "desc": "暴击提供持续5秒的5%伤害增幅，可叠加至多4次。",
+            "type": "成型装备",
+            "synthesis": "巨人腰带+拳套=强袭者的链枷"
+        },
+        {
+            "name": "秘法手套",
+            "picture": "https://game.gtimg.cn/images/lol/act/jkzlk/gamedata/equip/2044.png",
+            "basicDesc": "+150生命上限 +20%暴击率",
+            "desc": "每一回合：装备2件随机装备。  [需要用掉3个装备格。]",
+            "type": "成型装备",
+            "synthesis": "拳套+拳套=秘法手套"
+        },
+        {
+            "name": "锐利之刃",
+            "picture": "https://game.gtimg.cn/images/lol/act/jkzlk/gamedata/equip/2045.png",
+            "basicDesc": "+55物理加成 +10%伤害增幅",
+            "desc": "将完美的安宁和平静带给携带者——和所有面对它的人。",
+            "type": "成型装备",
+            "synthesis": "暴风之剑+暴风之剑=锐利之刃"
+        },
+        {
+            "name": "巨人捕手",
+            "picture": "https://game.gtimg.cn/images/lol/act/jkzlk/gamedata/equip/2046.png",
+            "basicDesc": "+15物理加成 +15法术加成 +15%攻击速度 +15%伤害增幅",
+            "desc": "对抗坦克时获得15%额外伤害增幅。",
+            "type": "成型装备",
+            "synthesis": "暴风之剑+反曲之弓=巨人捕手"
+        },
+        {
+            "name": "金锅锅冠冕",
+            "picture": "https://game.gtimg.cn/images/lol/act/jkzlk/gamedata/equip/tactician_s_shield.png",
+            "basicDesc": "",
+            "desc": "你的队伍获得+1最大队伍规模。  在携带者阵亡时，有10%几率掉落1金币。  “充满了某位哲学家的智慧……”",
+            "type": "成型装备",
+            "synthesis": "金锅锅+金锅锅=金锅锅冠冕"
+        },
+        {
+            "name": "金锅铲冠冕",
+            "picture": "https://game.gtimg.cn/images/lol/act/jkzlk/gamedata/equip/tactician_s_cape.png",
+            "basicDesc": "",
+            "desc": "你的队伍获得+1最大队伍规模。  在战斗10秒后，有10%几率掉落1金币。  “……以及一点运气。”",
+            "type": "成型装备",
+            "synthesis": "金锅锅+金铲铲=金锅铲冠冕"
+        },
+        {
+            "name": "光明版无尽之刃",
+            "picture": "https://game.gtimg.cn/images/lol/act/jkzlk/gamedata/equip/2548.png",
+            "basicDesc": "+75物理加成 +75%暴击率",
+            "desc": "技能可以暴击。  如果携带者的技能已经可以暴击了，则转而提供10%暴击伤害。",
+            "type": "光明武器"
+        },
+        {
+            "name": "光明版海克斯科技枪刃",
+            "picture": "https://game.gtimg.cn/images/lol/act/jkzlk/gamedata/equip/2549.png",
+            "basicDesc": "+40物理加成 +40法术加成 +30%全能吸血 +2法力回复",
+            "desc": "为生命值百分比最低的友军提供相当于40%造成伤害值的治疗。",
+            "type": "光明武器"
+        },
+        {
+            "name": "光明版朔极之矛",
+            "picture": "https://game.gtimg.cn/images/lol/act/jkzlk/gamedata/equip/2550.png",
+            "basicDesc": "+30物理加成 +30法术加成 +2法力回复",
+            "desc": "每次普攻提供10额外法力值。",
+            "type": "光明武器"
+        },
+        {
+            "name": "光明版夜之锋刃",
+            "picture": "https://game.gtimg.cn/images/lol/act/jkzlk/gamedata/equip/2551.png",
+            "basicDesc": "+30物理加成 +30法术加成 +40护甲 +30%攻击速度",
+            "desc": "救主灵刃：在60%生命值时，短暂变为不可被选取状态并摆脱负面效果、并治疗所有已损失生命值。",
+            "type": "光明武器"
+        },
+        {
+            "name": "光明版汲取剑",
+            "picture": "https://game.gtimg.cn/images/lol/act/jkzlk/gamedata/equip/2552.png",
+            "basicDesc": "+30物理加成 +30法术加成 +40魔法抗性 +40%全能吸血",
+            "desc": "每场战斗一次：在40%生命值时，获得一个护盾，护盾值相当于携带者50%的最大生命值，至多持续5秒。",
+            "type": "光明武器"
+        },
+        {
+            "name": "光明版斯特拉克的挑战护手",
+            "picture": "https://game.gtimg.cn/images/lol/act/jkzlk/gamedata/equip/steraksmegashield.png",
+            "basicDesc": "+600生命上限 +80物理加成",
+            "desc": "救主灵刃：在60%生命值时，获得相当于携带者100%最大生命值的护盾值，在6秒内快速衰减。",
+            "type": "光明武器"
+        },
+        {
+            "name": "光明版红霸符",
+            "picture": "https://game.gtimg.cn/images/lol/act/jkzlk/gamedata/equip/2554.png",
+            "basicDesc": "+90%攻击速度 +6%伤害增幅",
+            "desc": "攻击和技能的伤害对敌人们造成持续5秒的2%灼烧效果和33%重伤效果。  灼烧：每秒造成目标一部分最大生命值的真实伤害 重伤：降低受到的治疗效果",
+            "type": "光明武器"
+        },
+        {
+            "name": "光明版鬼索的狂暴之刃",
+            "picture": "https://game.gtimg.cn/images/lol/act/jkzlk/gamedata/equip/2555.png",
+            "basicDesc": "+20法术加成 +20%攻击速度",
+            "desc": "每秒获得14%可叠加的攻击速度。",
+            "type": "光明武器"
+        },
+        {
+            "name": "光明版虚空之杖",
+            "picture": "https://game.gtimg.cn/images/lol/act/jkzlk/gamedata/equip/icathiasrevenge.png",
+            "basicDesc": "+75法术加成 +30%攻击速度 +2法力回复",
+            "desc": "攻击和技能伤害都会对目标施加持续至战斗环节结束的30%魔抗击碎。这个效果不会叠加。  魔抗击碎：降低魔法抗性",
+            "type": "光明武器"
+        },
+        {
+            "name": "光明版泰坦的坚决",
+            "picture": "https://game.gtimg.cn/images/lol/act/jkzlk/gamedata/equip/2557.png",
+            "basicDesc": "+40护甲 +20%攻击速度",
+            "desc": "在攻击或承受伤害时获得4%物理加成和4%法术加成，至多可叠加25次。  在叠满层数后，获得20%伤害增幅，并获得控制免疫。",
+            "type": "光明武器"
+        },
+        {
+            "name": "光明版海妖之怒",
+            "picture": "https://game.gtimg.cn/images/lol/act/jkzlk/gamedata/equip/torrentialmaelstrom.png",
+            "basicDesc": "+20物理加成 +40魔法抗性 +20%攻击速度",
+            "desc": "攻击提供7%可叠加的物理加成，至多至15次攻击。在15次攻击后，获得60%攻击速度。",
+            "type": "光明武器"
+        },
+        {
+            "name": "光明版纳什之牙",
+            "picture": "https://game.gtimg.cn/images/lol/act/jkzlk/gamedata/equip/thebaronsgift.png",
+            "basicDesc": "+300生命上限 +30法术加成 +20%攻击速度 +40%暴击率",
+            "desc": "每次普攻提供4额外法力值，如果暴击则提供额外的8法力值。",
+            "type": "光明武器"
+        },
+        {
+            "name": "光明版班克斯的魔法帽",
+            "picture": "https://game.gtimg.cn/images/lol/act/jkzlk/gamedata/equip/2560.png",
+            "basicDesc": "+100法术加成 +30%伤害增幅",
+            "desc": "它见证过——并释放过——奇迹和灾难。",
+            "type": "光明武器"
+        },
+        {
+            "name": "光明版大天使之杖",
+            "picture": "https://game.gtimg.cn/images/lol/act/jkzlk/gamedata/equip/2561.png",
+            "basicDesc": "+60法术加成 +2法力回复",
+            "desc": "战斗开始时：在战斗期间，每5秒获得40%法术加成。",
+            "type": "光明武器"
+        },
+        {
+            "name": "光明版冕卫",
+            "picture": "https://game.gtimg.cn/images/lol/act/jkzlk/gamedata/equip/royalcrownshield.png",
+            "basicDesc": "+200生命上限 +40法术加成 +40护甲",
+            "desc": "战斗开始时：获得持续8秒的相当于50%最大生命值的护盾值。  在护盾到期时，获得50%法术加成。",
+            "type": "光明武器"
+        },
+        {
+            "name": "光明版离子火花",
+            "picture": "https://game.gtimg.cn/images/lol/act/jkzlk/gamedata/equip/2563.png",
+            "basicDesc": "+500生命上限 +30法术加成 +70魔法抗性",
+            "desc": "对2格内的敌人们施加30%魔抗击碎。在敌人施放一次技能时，对该敌人造成相当于该敌人300%法力值消耗的魔法伤害。 [直接伤害类装备] 魔抗击碎：降低魔抗值",
+            "type": "光明武器"
+        },
+        {
+            "name": "光明版莫雷洛秘典",
+            "picture": "https://game.gtimg.cn/images/lol/act/jkzlk/gamedata/equip/2564.png",
+            "basicDesc": "+300生命上限 +40法术加成 +2法力回复",
+            "desc": "攻击和技能的伤害对敌人们造成持续10秒的2%灼烧效果和33%重伤效果。  灼烧：每秒造成目标一部分最大生命值的真实伤害 重伤：降低受到的治疗效果",
+            "type": "光明武器"
+        },
+        {
+            "name": "光明版蓝霸符",
+            "picture": "https://game.gtimg.cn/images/lol/act/jkzlk/gamedata/equip/2565.png",
+            "basicDesc": "+30物理加成 +30法术加成 +10法力回复",
+            "desc": "从所有来源中获得20%额外物理加成和法术加成。",
+            "type": "光明武器"
+        },
+        {
+            "name": "光明版圣盾使的誓约",
+            "picture": "https://game.gtimg.cn/images/lol/act/jkzlk/gamedata/equip/2566.png",
+            "basicDesc": "+50护甲 +50魔法抗性 +2法力回复",
+            "desc": "战斗开始时：获得40法力值。  在40%生命值时，获得30法力值和相当于40%最大生命值的护盾值。",
+            "type": "光明武器"
+        },
+        {
+            "name": "光明版适应性头盔",
+            "picture": "https://game.gtimg.cn/images/lol/act/jkzlk/gamedata/equip/jakshotheprotean.png",
+            "basicDesc": "+40魔法抗性 +6法力回复",
+            "desc": "从所有来源中获得额外的30%法力值。携带者获得基于角色定位的一个额外加成：  坦克/战士：获得90护甲和魔抗。  其它角色定位：获得20%物理加成和法术加成。",
+            "type": "光明武器"
+        },
+        {
+            "name": "光明版振奋盔甲",
+            "picture": "https://game.gtimg.cn/images/lol/act/jkzlk/gamedata/equip/morespiritedvisage.png",
+            "basicDesc": "+600生命上限 +20%伤害减免 +4法力回复",
+            "desc": "每秒回复5%已损失生命值。",
+            "type": "光明武器"
+        },
+        {
+            "name": "光明版棘刺背心",
+            "picture": "https://game.gtimg.cn/images/lol/act/jkzlk/gamedata/equip/2569.png",
+            "basicDesc": "+130护甲",
+            "desc": "获得18%最大生命值。  使来自攻击的伤害降低10%。在被任一攻击命中时，对邻格所有敌人造成200魔法伤害。  冷却时间：2秒",
+            "type": "光明武器"
+        },
+        {
+            "name": "光明版石像鬼石板甲",
+            "picture": "https://game.gtimg.cn/images/lol/act/jkzlk/gamedata/equip/2570.png",
+            "basicDesc": "+200生命上限 +50护甲 +50魔法抗性",
+            "desc": "每有一个敌人正在以携带者为目标，携带者就会获得20护甲和20魔抗。",
+            "type": "光明武器"
+        },
+        {
+            "name": "光明版日炎斗篷",
+            "picture": "https://game.gtimg.cn/images/lol/act/jkzlk/gamedata/equip/2571.png",
+            "basicDesc": "+300生命上限 +40护甲",
+            "desc": "获得16%最大生命值。  每2秒，对2格内的一名敌人施加持续10秒的2%灼烧效果和33%重伤效果。  灼烧：每秒造成目标一部分最大生命值的真实伤害 重伤：降低受到的治疗效果",
+            "type": "光明武器"
+        },
+        {
+            "name": "光明版巨龙之爪",
+            "picture": "https://game.gtimg.cn/images/lol/act/jkzlk/gamedata/equip/2572.png",
+            "basicDesc": "+150魔法抗性",
+            "desc": "获得18%最大生命值。  每2秒治疗5%最大生命值。",
+            "type": "光明武器"
+        },
+        {
+            "name": "光明版薄暮法袍",
+            "picture": "https://game.gtimg.cn/images/lol/act/jkzlk/gamedata/equip/equinox.png",
+            "basicDesc": "+500生命上限 +40魔法抗性",
+            "desc": "3格内的敌人们会被施加30%护甲削减。在战斗的最初20秒获得50护甲和魔抗。  护甲击碎：降低护甲值",
+            "type": "光明武器"
+        },
+        {
+            "name": "光明版狂徒铠甲",
+            "picture": "https://game.gtimg.cn/images/lol/act/jkzlk/gamedata/equip/2574.png",
+            "basicDesc": "+1000生命上限",
+            "desc": "获得30%最大生命值。",
+            "type": "光明武器"
+        },
+        {
+            "name": "光明版最后的轻语",
+            "picture": "https://game.gtimg.cn/images/lol/act/jkzlk/gamedata/equip/2575.png",
+            "basicDesc": "+45物理加成 +40%攻击速度 +40%暴击率",
+            "desc": "来自攻击和技能的伤害会对目标施加持续到战斗环节结束的30%护甲击碎。这个效果不会叠加。  护甲击碎：降低护甲值",
+            "type": "光明武器"
+        },
+        {
+            "name": "光明版珠光护手",
+            "picture": "https://game.gtimg.cn/images/lol/act/jkzlk/gamedata/equip/2576.png",
+            "basicDesc": "+75法术加成 +75%暴击率",
+            "desc": "技能可以暴击。  如果携带者的技能已经可以暴击了，则转而提供10%暴击伤害。",
+            "type": "光明武器"
+        },
+        {
+            "name": "光明版正义之手",
+            "picture": "https://game.gtimg.cn/images/lol/act/jkzlk/gamedata/equip/2577.png",
+            "basicDesc": "+40%暴击率 +2法力回复",
+            "desc": "获得2个效果： -30%物理加成和30%法术加成。 -24%全能吸血。  生命值高于50%时，物理加成和法术加成翻倍。生命值低于50%时，全能吸血效果翻倍。",
+            "type": "光明武器"
+        },
+        {
+            "name": "光明版坚定之心",
+            "picture": "https://game.gtimg.cn/images/lol/act/jkzlk/gamedata/equip/midnightreaper.png",
+            "basicDesc": "+500生命上限 +40护甲 +40%暴击率",
+            "desc": "获得20%伤害减免。在高于50%生命值时，转而获得36%伤害减免。",
+            "type": "光明武器"
+        },
+        {
+            "name": "光明版水银",
+            "picture": "https://game.gtimg.cn/images/lol/act/jkzlk/gamedata/equip/2579.png",
+            "basicDesc": "+40魔法抗性 +30%攻击速度 +40%暴击率",
+            "desc": "战斗开始时：获得持续45秒的控制免疫效果。  每秒获得6%可叠加的攻击速度。",
+            "type": "光明武器"
+        },
+        {
+            "name": "光明版强袭者的链枷",
+            "picture": "https://game.gtimg.cn/images/lol/act/jkzlk/gamedata/equip/chainstriker.png",
+            "basicDesc": "+300生命上限 +20%攻击速度 +40%暴击率 +20%伤害增幅",
+            "desc": "暴击提供持续5秒的10%伤害增幅，可叠加至多4次。",
+            "type": "光明武器"
+        },
+        {
+            "name": "光明版秘法手套",
+            "picture": "https://game.gtimg.cn/images/lol/act/jkzlk/gamedata/equip/2581.png",
+            "basicDesc": "+150生命上限 +20%暴击率",
+            "desc": "每一回合：装备2件随机光明武器。  [需要用掉3个装备格。]",
+            "type": "光明武器"
+        },
+        {
+            "name": "光明版锐利之刃",
+            "picture": "https://game.gtimg.cn/images/lol/act/jkzlk/gamedata/equip/2582.png",
+            "basicDesc": "+110物理加成 +20%伤害增幅",
+            "desc": "它在敌人面前发光。或在朋友面前。或在任何活着的东西面前，真的。",
+            "type": "光明武器"
+        },
+        {
+            "name": "光明版巨人捕手",
+            "picture": "https://game.gtimg.cn/images/lol/act/jkzlk/gamedata/equip/2583.png",
+            "basicDesc": "+30物理加成 +30法术加成 +30%攻击速度 +30%伤害增幅",
+            "desc": "对抗坦克时获得30%额外伤害增幅。",
+            "type": "光明武器"
+        },
+        {
+            "name": "基克的先驱",
+            "picture": "https://game.gtimg.cn/images/lol/act/jkzlk/gamedata/equip/2007.png",
+            "basicDesc": "+150生命上限",
+            "desc": "战斗开始时：提供【攻击速度】30%攻击速度给携带者和同一排2格内的友军们。  [辅助装]",
+            "type": "辅助装备"
+        },
+        {
+            "name": "兰顿之兆",
+            "picture": "https://game.gtimg.cn/images/lol/act/jkzlk/gamedata/equip/3602.png",
+            "basicDesc": "+150生命上限",
+            "desc": "战斗开始时：提供【护甲】30护甲和【魔法抗性】30魔抗给携带者和邻格的友军们。  [辅助装]",
+            "type": "辅助装备"
+        },
+        {
+            "name": "能量圣杯",
+            "picture": "https://game.gtimg.cn/images/lol/act/jkzlk/gamedata/equip/2124.png",
+            "basicDesc": "+150生命上限",
+            "desc": "战斗开始时：提供25%法术加成和10法力值给携带者和同一排2格内的友军们。  [辅助装]",
+            "type": "辅助装备"
+        },
+        {
+            "name": "静止法衣",
+            "picture": "https://game.gtimg.cn/images/lol/act/jkzlk/gamedata/equip/2240.png",
+            "basicDesc": "+150生命上限",
+            "desc": "战斗开始时：射出一道光束，对敌人们施加30%破法。  你的弈子们获得60生命值。  [辅助装][唯一-每位英雄仅限1件] 破法：最大法力值提升，持续到施放技能为止。",
+            "type": "辅助装备"
+        },
+        {
+            "name": "兹若特传送门",
+            "picture": "https://game.gtimg.cn/images/lol/act/jkzlk/gamedata/equip/2214.png",
+            "basicDesc": "+150生命上限",
+            "desc": "召唤一个大型虚空生物。它的强度会在每个阶段提升。  [辅助装] [唯一-每位英雄仅限1件]",
+            "type": "辅助装备"
+        },
+        {
+            "name": "钢铁烈阳之匣",
+            "picture": "https://game.gtimg.cn/images/lol/act/jkzlk/gamedata/equip/2018.png",
+            "basicDesc": "+150生命上限",
+            "desc": "战斗开始时：携带者和同一排2格内的友军们获得持续20秒的250护盾值、20护甲与20魔抗。  [辅助装]",
+            "type": "辅助装备"
+        },
+        {
+            "name": "灵风",
+            "picture": "https://game.gtimg.cn/images/lol/act/jkzlk/gamedata/equip/2032.png",
+            "basicDesc": "+150生命上限",
+            "desc": "战斗开始时：在棋盘对面召唤一道飓风，来将与飓风相距最近的那个敌人移出战斗5秒。  己方获得2%攻击速度。  [辅助装] [无视控制免疫效果。] [唯一-每位英雄仅可装备一件]",
+            "type": "辅助装备"
+        },
+        {
+            "name": "黑曜石切割者",
+            "picture": "https://game.gtimg.cn/images/lol/act/jkzlk/gamedata/equip/3601.png",
+            "basicDesc": "+150生命上限",
+            "desc": "伤害造成持续15秒的30%魔抗击碎和30%护甲击碎。  己方弈子获得8%物理加成和8%法术加成。  [辅助装][唯一-每位英雄仅限1件] 魔抗击碎：减少魔抗值 护甲击碎：降低护甲值",
+            "type": "辅助装备"
+        },
+        {
+            "name": "军团圣盾",
+            "picture": "https://game.gtimg.cn/images/lol/act/jkzlk/gamedata/equip/aegis.png",
+            "basicDesc": "+150生命上限",
+            "desc": "战斗开始时：提供25%攻击速度和15护甲与魔抗给携带者、同一排的邻格友军、以及携带者身后的友军，持续12秒。  [辅助装]",
+            "type": "辅助装备"
+        },
+        {
+            "name": "殉道美德",
+            "picture": "https://game.gtimg.cn/images/lol/act/jkzlk/gamedata/equip/virtueofthemartyr.png",
+            "basicDesc": "+150生命上限",
+            "desc": "每5秒治疗所有己方弈子7%最大生命值。当携带者阵亡时，治疗效果提升至14%最大生命值并进行2次额外的治疗。  [辅助装]",
+            "type": "辅助装备"
+        },
+        {
+            "name": "女妖面纱",
+            "picture": "https://game.gtimg.cn/images/lol/act/jkzlk/gamedata/equip/bansheesveil.png",
+            "basicDesc": "+150生命上限",
+            "desc": "战斗开始时：为携带者和同一排1格内的友军们提供持续18秒的控制免疫效果和25%攻击速度。  [辅助装][唯一-每位英雄仅能装备1件]",
+            "type": "辅助装备"
+        },
+        {
+            "name": "无用大宝石",
+            "picture": "https://game.gtimg.cn/images/lol/act/jkzlk/gamedata/equip/5007.png",
+            "basicDesc": "+150生命上限",
+            "desc": "己方弈子获得5%伤害增幅。携带者每存活1秒，己方弈子们就会获得追加的1%伤害增幅，总和至多至20%。  [辅助装]",
+            "type": "辅助装备"
+        },
+        {
+            "name": "辅助手套",
+            "picture": "https://game.gtimg.cn/images/lol/act/jkzlk/gamedata/equip/accomplices_gloves.png",
+            "basicDesc": "+150生命上限 +20%暴击率",
+            "desc": "每回合：装备2件随机辅助装。  [需要用掉3个装备格。]",
+            "type": "辅助装备"
+        },
+        {
+            "name": "永恒烈焰",
+            "picture": "https://game.gtimg.cn/images/lol/act/jkzlk/gamedata/equip/the_eternal_flame.png",
+            "basicDesc": "+150生命上限",
+            "desc": "携带者处于存活状态时，所有敌人被施加33%重伤并且所有友军获得8%伤害增幅。这个效果每5秒刷新一次。  [辅助装] <color=d1c9b9>重伤：降低受到的治疗效果",
+            "type": "辅助装备"
+        },
+        {
+            "name": "骑士之誓",
+            "picture": "https://game.gtimg.cn/images/lol/act/jkzlk/gamedata/equip/knights_vow.png",
+            "basicDesc": "+50生命上限",
+            "desc": "战斗开始时：提供200生命值和15%全能吸血给携带者和同一排1格内的友军们。  [辅助装]",
+            "type": "辅助装备"
+        },
+        {
+            "name": "月石再生器",
+            "picture": "https://game.gtimg.cn/images/lol/act/jkzlk/gamedata/equip/moonstone_renewer.png",
+            "basicDesc": "+150生命上限",
+            "desc": "每4秒，提供持续4秒的55-325护盾值(基于阶段)给2个生命值百分比最低的友军。  [辅助装]",
+            "type": "辅助装备"
+        },
+        {
+            "name": "不稳定的财宝箱",
+            "picture": "https://game.gtimg.cn/images/lol/act/jkzlk/gamedata/equip/unstable_treasure_chest.png",
+            "basicDesc": "+150生命上限",
+            "desc": "携带者阵亡时，4个拥有最高百分比生命值的友军获得一件临时成装。",
+            "type": "辅助装备"
+        },
+        {
+            "name": "大亨之铠",
+            "picture": "https://game.gtimg.cn/images/lol/act/jkzlk/gamedata/equip/5004.png",
+            "basicDesc": "+300生命上限",
+            "desc": "在承受伤害时提供1护甲、1魔抗和5生命值，这个效果至多叠加35次。  在满层时，提供【金币】1金币并且每12秒继续提供【金币】1金币。  [唯一-每位英雄仅限1件]",
+            "type": "神器装备"
+        },
+        {
+            "name": "死亡之蔑",
+            "picture": "https://game.gtimg.cn/images/lol/act/jkzlk/gamedata/equip/3609.png",
+            "basicDesc": "+25物理加成 +15%攻击速度 +40护甲 +25%全能吸血",
+            "desc": "携带者受到的50%伤害会转而在4秒里作为非致命伤害来持续扣除。  [唯一-每位英雄仅限1件]",
+            "type": "神器装备"
+        },
+        {
+            "name": "三相之力",
+            "picture": "https://game.gtimg.cn/images/lol/act/jkzlk/gamedata/equip/3607.png",
+            "basicDesc": "",
+            "desc": "成吨的一切！",
+            "type": "神器装备"
+        },
+        {
+            "name": "金币收集者",
+            "picture": "https://game.gtimg.cn/images/lol/act/jkzlk/gamedata/equip/3603.png",
+            "basicDesc": "+40物理加成 +20%暴击率",
+            "desc": "携带者的攻击和技能会处决低于12%最大生命值的目标。处决有33%几率掉落【金币】1金币。  [唯一-每个弈子仅可装备1件]",
+            "type": "神器装备"
+        },
+        {
+            "name": "中娅悖论",
+            "picture": "https://game.gtimg.cn/images/lol/act/jkzlk/gamedata/equip/3610.png",
+            "basicDesc": "+25法术加成 +25护甲 +25魔法抗性",
+            "desc": "每场战斗一次：在40%生命值时，携带者进入持续3秒的免疫伤害和无法被选取状态。  [唯一-每位英雄仅限1件]",
+            "type": "神器装备"
+        },
+        {
+            "name": "碎舰者",
+            "picture": "https://game.gtimg.cn/images/lol/act/jkzlk/gamedata/equip/2098.png",
+            "basicDesc": "+50护甲 +50魔法抗性",
+            "desc": "战斗开始时：如果邻格内没有己方弈子，获得400生命值、10%物理加成和10%法术加成。",
+            "type": "神器装备"
+        },
+        {
+            "name": "狙击手的专注",
+            "picture": "https://game.gtimg.cn/images/lol/act/jkzlk/gamedata/equip/2097.png",
+            "basicDesc": "+20物理加成 +20法术加成 +20%攻击速度",
+            "desc": "在对抗相距4格或更远的目标们时获得40%伤害增幅。",
+            "type": "神器装备"
+        },
+        {
+            "name": "投机者之刃",
+            "picture": "https://game.gtimg.cn/images/lol/act/jkzlk/gamedata/equip/5008.png",
+            "basicDesc": "+45%攻击速度",
+            "desc": "获得【攻击速度】1%x你的【金币】金币存款的攻击速度(在【金币】30金币时达到最大值)。  每次攻击有5%几率掉落【金币】1金币。  [唯一-每位英雄仅限1件]",
+            "type": "神器装备"
+        },
+        {
+            "name": "飞升护符",
+            "picture": "https://game.gtimg.cn/images/lol/act/jkzlk/gamedata/equip/talisman_of_ascension.png",
+            "basicDesc": "+450生命上限 +20物理加成 +20法术加成",
+            "desc": "在22秒后，获得100%最大生命值和120%伤害增幅，持续到战斗环节结束。",
+            "type": "神器装备"
+        },
+        {
+            "name": "鱼骨头",
+            "picture": "https://game.gtimg.cn/images/lol/act/jkzlk/gamedata/equip/fishbones.png",
+            "basicDesc": "+50物理加成 +50%攻击速度",
+            "desc": "携带者的攻击会瞄准随机的敌人。",
+            "type": "神器装备"
+        },
+        {
+            "name": "连指手套",
+            "picture": "https://game.gtimg.cn/images/lol/act/jkzlk/gamedata/equip/mittens.png",
+            "basicDesc": "+65%攻击速度 +15%伤害增幅",
+            "desc": "将携带者缩小，为其提供移动速度提升并免疫冰冷、灼烧、以及重伤。  冰冷：降低攻击速度 灼烧：每秒造成目标一部分最大生命值的真实伤害 重伤：降低受到的治疗效果",
+            "type": "神器装备"
+        },
+        {
+            "name": "密银黎明",
+            "picture": "https://game.gtimg.cn/images/lol/act/jkzlk/gamedata/equip/silvermere_dawn.png",
+            "basicDesc": "+140物理加成 +80护甲 +80魔法抗性",
+            "desc": "为携带者提供免疫晕眩的效果，并且携带者的攻击可以使目标晕眩0.8秒。  携带者的攻击速度锁定为0.5。",
+            "type": "神器装备"
+        },
+        {
+            "name": "暗行者之爪",
+            "picture": "https://game.gtimg.cn/images/lol/act/jkzlk/gamedata/equip/chonccsprowlersclaw.png",
+            "basicDesc": "+200生命上限 +35物理加成 +45%暴击率",
+            "desc": "在击杀一个目标后，摆脱负面效果并冲刺到4格内相距最远的那个目标处。下两次暴击攻击造成50%额外暴击伤害。",
+            "type": "神器装备"
+        },
+        {
+            "name": "智慧末刃",
+            "picture": "https://game.gtimg.cn/images/lol/act/jkzlk/gamedata/equip/wit_s_end.png",
+            "basicDesc": "+400生命上限 +20护甲 +20魔法抗性 +25%攻击速度",
+            "desc": "攻击造成30额外魔法伤害。  治疗携带者，数额为30%的所有已造成魔法伤害。  这个伤害基于阶段而提升。",
+            "type": "神器装备"
+        },
+        {
+            "name": "视界专注",
+            "picture": "https://game.gtimg.cn/images/lol/act/jkzlk/gamedata/equip/horizon_focus.png",
+            "basicDesc": "+250生命上限 +20护甲 +20魔法抗性 +2法力回复",
+            "desc": "将一名敌人晕眩时会引发闪电对其进行打击，造成相当于其30%最大生命值的魔法伤害。",
+            "type": "神器装备"
+        },
+        {
+            "name": "疾射火炮",
+            "picture": "https://game.gtimg.cn/images/lol/act/jkzlk/gamedata/equip/rapid_firecannon.png",
+            "basicDesc": "+65%攻击速度 +5%伤害增幅",
+            "desc": "获得+1攻击距离，并且这个距离会在携带者每击杀一个敌人时提升1。",
+            "type": "神器装备"
+        },
+        {
+            "name": "枯萎珠宝",
+            "picture": "https://game.gtimg.cn/images/lol/act/jkzlk/gamedata/equip/blighting_jewel.png",
+            "basicDesc": "+60法术加成 +2法力回复",
+            "desc": "造成魔法伤害时会将目标的魔抗削减2。如果目标的魔抗是0，则转而会为携带者提供2法力值。  技能伤害每0.5秒仅能在每个敌人身上触发一次此效果。",
+            "type": "神器装备"
+        },
+        {
+            "name": "探索者的护臂",
+            "picture": "https://game.gtimg.cn/images/lol/act/jkzlk/gamedata/equip/seeker_s_armguard.png",
+            "basicDesc": "+25法术加成 +10护甲 +10魔法抗性 +20%全能吸血",
+            "desc": "参与击杀后会使携带者的护甲、魔抗和法术加成提升20。",
+            "type": "神器装备"
+        },
+        {
+            "name": "光盾徽章",
+            "picture": "https://game.gtimg.cn/images/lol/act/jkzlk/gamedata/equip/lightshield_crest.png",
+            "basicDesc": "+55护甲 +55魔法抗性",
+            "desc": "每3秒，为生命值百分比最低的那个友军提供护盾，护盾值相当于携带者70%的护甲与魔抗总和，持续5秒。  在阵亡时，将这个护盾效果提供给所有友军。",
+            "type": "神器装备"
+        },
+        {
+            "name": "巫妖之祸",
+            "picture": "https://game.gtimg.cn/images/lol/act/jkzlk/gamedata/equip/lich_bane.png",
+            "basicDesc": "+55法术加成 +10%攻击速度",
+            "desc": "携带者在每次技能施放后的第一次攻击造成240额外魔法伤害。  这个伤害基于阶段而提升。",
+            "type": "神器装备"
+        },
+        {
+            "name": "烁刃",
+            "picture": "https://game.gtimg.cn/images/lol/act/jkzlk/gamedata/equip/flickerblade.png",
+            "basicDesc": "+10法术加成 +12%攻击速度",
+            "desc": "攻击提供5%可叠加的攻击速度。每5次攻击还会提供2%物理加成和2%法术加成。",
+            "type": "神器装备"
+        },
+        {
+            "name": "斯塔缇克电刃",
+            "picture": "https://game.gtimg.cn/images/lol/act/jkzlk/gamedata/equip/statikkshiv.png",
+            "basicDesc": "+15法术加成 +50%攻击速度",
+            "desc": "每第3次攻击对4名敌人造成30+40%携带者额外法术加成的额外魔法伤害。",
+            "type": "神器装备"
+        },
+        {
+            "name": "顽强不屈",
+            "picture": "https://game.gtimg.cn/images/lol/act/jkzlk/gamedata/equip/theindomitable.png",
+            "basicDesc": "+500生命上限 +20护甲 +20魔法抗性",
+            "desc": "携带者的移动速度大幅降低。  获得12%最大生命值、晕眩免疫，并将当前目标拉到近战距离。",
+            "type": "神器装备"
+        },
+        {
+            "name": "巨型九头蛇",
+            "picture": "https://game.gtimg.cn/images/lol/act/jkzlk/gamedata/equip/titanichydra.png",
+            "basicDesc": "+300生命上限 +20物理加成 +20%攻击速度",
+            "desc": "攻击对目标和邻格敌人造成相当于携带者3%最大生命值外加8%物理加成的额外物理伤害。",
+            "type": "神器装备"
+        },
+        {
+            "name": "黎明核心",
+            "picture": "https://game.gtimg.cn/images/lol/act/jkzlk/gamedata/equip/dawncore.png",
+            "basicDesc": "+10物理加成 +10法术加成",
+            "desc": "携带者的最大法力值缩减10。后续的技能施放会使最大法力值缩减10%，直至最小值10。",
+            "type": "神器装备"
+        },
+        {
+            "name": "黎明圣盾",
+            "picture": "https://game.gtimg.cn/images/lol/act/jkzlk/gamedata/equip/aegisofdawn.png",
+            "basicDesc": "+200生命上限 +50护甲",
+            "desc": "每3秒，从1格内的敌人们处偷取5护甲，并治疗相当于携带者15%护甲值的生命值。  如果还携带了【黄昏圣盾】，则转而每1.5秒触发这件装备的效果。  治疗效果基于阶段提升。",
+            "type": "神器装备"
+        },
+        {
+            "name": "黄昏圣盾",
+            "picture": "https://game.gtimg.cn/images/lol/act/jkzlk/gamedata/equip/aegisofdusk.png",
+            "basicDesc": "+200生命上限 +70魔法抗性",
+            "desc": "每3秒，从1格内的敌人们处偷取5魔抗，并造成相当于携带者15%魔抗值的魔法伤害。  如果还携带了【黎明圣盾】，则转而每1.5秒触发这件装备的效果。  伤害基于阶段提升。",
+            "type": "神器装备"
+        },
+        {
+            "name": "虚空护手",
+            "picture": "https://game.gtimg.cn/images/lol/act/jkzlk/gamedata/equip/voidgauntlet.png",
+            "basicDesc": "+300生命上限 +10%伤害减免",
+            "desc": "战斗开始时：储存25%最大生命值并且每秒储存额外的2%。在阵亡时，释放相当于生命值储量的魔法伤害，分摊给4格内的敌人们。  唯一：一个弈子仅限一件",
+            "type": "神器装备"
+        },
+        {
+            "name": "帽子饮品",
+            "picture": "https://game.gtimg.cn/images/lol/act/jkzlk/gamedata/equip/cappajuice.png",
+            "basicDesc": "+20物理加成 +20法术加成 +20%攻击速度",
+            "desc": "携带者在每次参与击杀后带上一顶帽子。携带者从每顶帽子中获得0.75%物理加成和法术加成。阵亡时，失去20%总帽子数。(帽子数：0)",
+            "type": "神器装备"
+        },
+        {
+            "name": "恶火小斧",
+            "picture": "https://game.gtimg.cn/images/lol/act/jkzlk/gamedata/equip/hellfirehatchet.png",
+            "basicDesc": "+150生命上限 +20物理加成 +20%全能吸血",
+            "desc": "攻击造成相当于携带者2%最大生命值的额外物理伤害。每1%已损失生命值，获得1%攻击速度。",
+            "type": "神器装备"
+        },
+        {
+            "name": "永恒契约",
+            "picture": "https://game.gtimg.cn/images/lol/act/jkzlk/gamedata/equip/eternalpact.png",
+            "basicDesc": "+40法术加成 +1法力回复",
+            "desc": "战斗开始时：与生命值最高的那个友军形成一个契约，如果其阵亡，则获得10法力回复和40%法术加成。  当该友军使用其技能时，获得6法力值。每6秒，为该友军提供护盾值，数额相当于携带者的150%法术加成。",
+            "type": "神器装备"
+        },
+        {
+            "name": "暗裔之镰",
+            "picture": "https://game.gtimg.cn/images/lol/act/jkzlk/gamedata/equip/darkinscythe.png",
+            "basicDesc": "+25物理加成 +25法术加成",
+            "desc": "携带者获得【暗裔】羁绊。  每4秒，斩击邻格的敌人们，造成200%攻击力的物理伤害。在参与击杀后或在携带者冲刺时，再次斩击。  冲刺冷却时间：1.5秒",
+            "type": "神器装备"
+        },
+        {
+            "name": "暗裔之盾",
+            "picture": "https://game.gtimg.cn/images/lol/act/jkzlk/gamedata/equip/darkinaegis.png",
+            "basicDesc": "+200生命上限 +25护甲 +25魔法抗性",
+            "desc": "携带者获得【暗裔】羁绊。  每一秒，对2格内的敌人们造成携带者1%最大生命值的魔法伤害。当这个区域内的单位阵亡时，治疗2%最大生命值。",
+            "type": "神器装备"
+        },
+        {
+            "name": "暗裔之弓",
+            "picture": "https://game.gtimg.cn/images/lol/act/jkzlk/gamedata/equip/darkinbow.png",
+            "basicDesc": "+10物理加成 +25%攻击速度",
+            "desc": "携带者获得【暗裔】羁绊。  每10次攻击，发射一支箭矢穿过当前目标，造成500%攻击力的物理伤害，该伤害值每命中一个敌人就会降低33%。",
+            "type": "神器装备"
+        },
+        {
+            "name": "暗裔之杖",
+            "picture": "https://game.gtimg.cn/images/lol/act/jkzlk/gamedata/equip/darkinstaff.png",
+            "basicDesc": "+40法术加成 +2法力回复",
+            "desc": "携带者获得【暗裔】羁绊。  每花费20法力值，就会对当前目标附近的敌人们发射一个卷须，造成40魔法伤害。  伤害基于阶段提升",
+            "type": "神器装备"
+        },
+        {
+            "name": "亡者的短剑",
+            "picture": "https://game.gtimg.cn/images/lol/act/jkzlk/gamedata/equip/deadmansdagger.png",
+            "basicDesc": "+20物理加成 +20法术加成",
+            "desc": "攻击和技能将处决生命值低于12%的敌人。击杀时，获得15%物理加成和15%法术加成。  推荐携带者：【格雷福斯】",
+            "type": "特殊装备"
+        },
+        {
+            "name": "大副的燧发枪",
+            "picture": "https://game.gtimg.cn/images/lol/act/jkzlk/gamedata/equip/firstmatesflintlock.png",
+            "basicDesc": "+10物理加成 +20%暴击率",
+            "desc": "每1秒，获得3%物理加成和3%攻击速度。  推荐携带者：【厄运小姐】",
+            "type": "特殊装备"
+        },
+        {
+            "name": "酒吧指虎",
+            "picture": "https://game.gtimg.cn/images/lol/act/jkzlk/gamedata/equip/barknuckles.png",
+            "basicDesc": "+300生命上限 +35护甲 +35魔法抗性",
+            "desc": "高于50%最大生命值时，从该装备中获得的护甲和魔抗加成翻倍。  每4秒，对相距最近的2名敌人造成相当于50%当前护甲和魔抗总值的魔法伤害。  推荐携带者：【诺提勒斯】",
+            "type": "特殊装备"
+        },
+        {
+            "name": "成堆柑橘",
+            "picture": "https://game.gtimg.cn/images/lol/act/jkzlk/gamedata/equip/pileocitrus.png",
+            "basicDesc": "+600生命上限",
+            "desc": "每7秒，治疗15%最大生命值并摆脱所有负面效果。在15秒后，获得10【银蛇币】。  推荐携带者：【俄洛伊】",
+            "type": "特殊装备"
+        },
+        {
+            "name": "幸运达布隆金币",
+            "picture": "https://game.gtimg.cn/images/lol/act/jkzlk/gamedata/equip/luckydoubloon.png",
+            "basicDesc": "+20%暴击率 +20%攻击速度",
+            "desc": "参与击杀后，生成一个额外的1【银蛇币】。(已赚取：0)  推荐携带者：【普朗克】",
+            "type": "特殊装备"
+        },
+        {
+            "name": "船长的酿造品",
+            "picture": "https://game.gtimg.cn/images/lol/act/jkzlk/gamedata/equip/captainsbrew.png",
+            "basicDesc": "+100生命上限 +15物理加成 +15法术加成",
+            "desc": "攻击和技能将【灼烧】和【冰冷】敌人3秒。  推荐携带者：【崔斯特】",
+            "type": "特殊装备"
+        },
+        {
+            "name": "黑市补货",
+            "picture": "https://game.gtimg.cn/images/lol/act/jkzlk/gamedata/equip/blackmarketrestock.png",
+            "basicDesc": "",
+            "desc": "替换黑市中的所有物品！",
+            "type": "特殊装备"
+        },
+        {
+            "name": "比尔吉沃特次级英雄复制器",
+            "picture": "https://game.gtimg.cn/images/lol/act/jkzlk/gamedata/equip/bilgewaterlesserchampionduplicator.png",
+            "basicDesc": "",
+            "desc": "对一个3费或以下的【比尔吉沃特】弈子使用，即可生成一个该弈子的1星版本到你的备战区。",
+            "type": "特殊装备"
+        },
+        {
+            "name": "皇室外壳",
+            "picture": "https://game.gtimg.cn/images/lol/act/jkzlk/gamedata/equip/royalhusk.png",
+            "basicDesc": "",
+            "desc": "获得200生命值。在生命值跌下50%最大生命值时，召唤1个拥有该弈子25%最大生命值的虚灵。获得400HP。当生命值首次降低至50%时，召唤1个拥有该弈子50%最大生命值的虚灵。  推荐使用者：【科加斯】和【峡谷先锋】",
+            "type": "特殊装备"
+        },
+        {
+            "name": "坚铁甲壳",
+            "picture": "https://game.gtimg.cn/images/lol/act/jkzlk/gamedata/equip/ironcarapace.png",
+            "basicDesc": "",
+            "desc": "获得200最大生命值，获得最大生命值0.5%的护甲和魔抗。获得400最大生命值，获得最大生命值1.1%的护甲和魔抗。  推荐使用者：【科加斯】、【雷克塞】和【峡谷先锋】",
+            "type": "特殊装备"
+        },
+        {
+            "name": "榨血核体",
+            "picture": "https://game.gtimg.cn/images/lol/act/jkzlk/gamedata/equip/leechingnucleus.png",
+            "basicDesc": "",
+            "desc": "造成实际伤害的15%会治疗生命值百分比最低的友军。 对一名敌人造成伤害后，从其身上窃取2%的物理加成和法术加成，至多叠加15层(来自所有来源)。造成实际伤害的30%会治疗生命值百分比最低的友军。 一名敌人造成伤害后，从其身上窃取4%的理加成和法术加成，至多叠加15层(来自所有来源)。  推荐使用者：【克格莫】、【玛尔扎哈】和【卡莎】",
+            "type": "特殊装备"
+        },
+        {
+            "name": "喷吐棘刺",
+            "picture": "https://game.gtimg.cn/images/lol/act/jkzlk/gamedata/equip/spitterspines.png",
+            "basicDesc": "",
+            "desc": "造成1000点伤害后，向2名相距最近的敌人发射多个尖刺，造成111物理伤害。造成1000点伤害后，向最近的两个敌人发射尖刺，造成222物理伤害。  推荐使用者：【雷克塞】、【玛尔扎哈】和【卡莎】",
+            "type": "特殊装备"
+        },
+        {
+            "name": "肾上腺素模块",
+            "picture": "https://game.gtimg.cn/images/lol/act/jkzlk/gamedata/equip/adrenalinemodules.png",
+            "basicDesc": "",
+            "desc": "获得15%伤害增幅，每3次攻击后提高1%。获得30%增伤，每3次攻击后提高2%  推荐使用者：【卑尔维斯】和【卡莎】",
+            "type": "特殊装备"
+        },
+        {
+            "name": "掠食本能",
+            "picture": "https://game.gtimg.cn/images/lol/act/jkzlk/gamedata/equip/predatorinstincts.png",
+            "basicDesc": "",
+            "desc": "获得20%物理强度和法术强度，每9秒，净化控制效果并进入持续1秒的不可被选取状态。获得40%物理强度和法术强度，每9秒，净化控制效果并进入持续2秒的不可被选取状态。  推荐使用者：【雷克塞】和【卑尔维斯】",
+            "type": "特殊装备"
+        },
+        {
+            "name": "90口径绳网",
+            "picture": "https://game.gtimg.cn/images/lol/act/jkzlk/gamedata/equip/90calibernets.png",
+            "basicDesc": "",
+            "desc": "对造成最多伤害的3名敌人造成2秒晕眩。",
+            "type": "特殊装备"
+        },
+        {
+            "name": "超频电容器",
+            "picture": "https://game.gtimg.cn/images/lol/act/jkzlk/gamedata/equip/overclockedcapacitors.png",
+            "basicDesc": "",
+            "desc": "当发明开火时，你的队伍获得22%攻击速度。",
+            "type": "特殊装备"
+        },
+        {
+            "name": "调谐振荡器",
+            "picture": "https://game.gtimg.cn/images/lol/act/jkzlk/gamedata/equip/tunedoscillator.png",
+            "basicDesc": "",
+            "desc": "你的队伍的治疗和护盾值提升25%。",
+            "type": "特殊装备"
+        },
+        {
+            "name": "爆裂护盾",
+            "picture": "https://game.gtimg.cn/images/lol/act/jkzlk/gamedata/equip/blastshield.png",
+            "basicDesc": "",
+            "desc": "所有友军获得相当于20%最大生命值的护盾值。",
+            "type": "特殊装备"
+        },
+        {
+            "name": "电磁脉冲",
+            "picture": "https://game.gtimg.cn/images/lol/act/jkzlk/gamedata/equip/emp.png",
+            "basicDesc": "",
+            "desc": "所有敌人下一次施放的法力消耗提升15。",
+            "type": "特殊装备"
+        },
+        {
+            "name": "电流过载",
+            "picture": "https://game.gtimg.cn/images/lol/act/jkzlk/gamedata/equip/electricaloverload.png",
+            "basicDesc": "",
+            "desc": "对所有敌人造成100+10%最大生命值的真实伤害。",
+            "type": "特殊装备"
+        },
+        {
+            "name": "连续齿轮",
+            "picture": "https://game.gtimg.cn/images/lol/act/jkzlk/gamedata/equip/continuumcogs.png",
+            "basicDesc": "",
+            "desc": "所有友军获得2法力回复和12法术加成。",
+            "type": "特殊装备"
+        },
+        {
+            "name": "磁控线圈",
+            "picture": "https://game.gtimg.cn/images/lol/act/jkzlk/gamedata/equip/magnetroncoil.png",
+            "basicDesc": "",
+            "desc": "【皮尔特沃夫】单位获得18%伤害增幅，来自这场战斗中任意【皮尔特沃夫】单位的每次施放都会使该加成提升1%。",
+            "type": "特殊装备"
+        },
+        {
+            "name": "微型导弹",
+            "picture": "https://game.gtimg.cn/images/lol/act/jkzlk/gamedata/equip/microrockets.png",
+            "basicDesc": "",
+            "desc": "发射一连串导弹，重复造成相当于本场战斗中【皮尔特沃夫】单位66%造成伤害的魔法伤害。",
+            "type": "特殊装备"
+        },
+        {
+            "name": "动能屏障",
+            "picture": "https://game.gtimg.cn/images/lol/act/jkzlk/gamedata/equip/kineticbarrier.png",
+            "basicDesc": "",
+            "desc": "【皮尔特沃夫】单位获得60护甲和20魔抗。如果他们受到的魔法伤害多于物理伤害，则这个效果的护甲值与魔抗值对调。",
+            "type": "特殊装备"
+        },
+        {
+            "name": "巨大化射线",
+            "picture": "https://game.gtimg.cn/images/lol/act/jkzlk/gamedata/equip/gigantificationray.png",
+            "basicDesc": "",
+            "desc": "【皮尔特沃夫】单位获得23%最大生命值并且体型变得更大。",
+            "type": "特殊装备"
+        },
+        {
+            "name": "加速之门",
+            "picture": "https://game.gtimg.cn/images/lol/act/jkzlk/gamedata/equip/accelerationgate.png",
+            "basicDesc": "",
+            "desc": "在施放技能后，【皮尔特沃夫】单位在2秒里持续回复其35%最大法力值。",
+            "type": "特殊装备"
+        },
+        {
+            "name": "采矿钻机",
+            "picture": "https://game.gtimg.cn/images/lol/act/jkzlk/gamedata/equip/miningdrill.png",
+            "basicDesc": "",
+            "desc": "获得1金币或1鞋子。(在【皮尔特沃夫】单位的每次施放时重复！)",
+            "type": "特殊装备"
+        },
+        {
+            "name": "高级生命体",
+            "picture": "https://game.gtimg.cn/images/lol/act/jkzlk/gamedata/equip/superiorlifeform.png",
+            "basicDesc": "",
+            "desc": "为你最强大的2个【皮尔特沃夫】单位召唤一个机器人复制体。它们拥有本尊40%的生命值，会造成本尊50%的伤害。",
+            "type": "特殊装备"
+        },
+        {
+            "name": "回声引擎",
+            "picture": "https://game.gtimg.cn/images/lol/act/jkzlk/gamedata/equip/echoengine.png",
+            "basicDesc": "",
+            "desc": "每7秒重复你的其它模块的效果，持续至战斗结束。",
+            "type": "特殊装备"
+        },
+        {
+            "name": "护甲消除器",
+            "picture": "https://game.gtimg.cn/images/lol/act/jkzlk/gamedata/equip/armornullifier.png",
+            "basicDesc": "",
+            "desc": "【皮尔特沃夫】单位造成25%额外伤害，对抗坦克时提升至35%。",
+            "type": "特殊装备"
+        },
+        {
+            "name": "升级！",
+            "picture": "https://game.gtimg.cn/images/lol/act/jkzlk/gamedata/equip/upgrade.png",
+            "basicDesc": "",
+            "desc": "将你最强大的那个【皮尔特沃夫】单位身上的随机一件装备升级至光明版。该单位还会获得15%攻击速度和300最大生命值。",
+            "type": "特殊装备"
+        },
+        {
+            "name": "残酷弯刀",
+            "picture": "https://game.gtimg.cn/images/lol/act/jkzlk/gamedata/equip/cutthroatscutlass.png",
+            "basicDesc": "+20物理加成 +20法术加成 +15%全能吸血",
+            "desc": "对敌人造成伤害时会使其流血，在4秒里持续造成额外的35%伤害。  推荐携带者：【普朗克】",
+            "type": "特殊装备"
+        },
+        {
+            "name": "比尔吉沃特纹章",
+            "picture": "https://game.gtimg.cn/images/lol/act/jkzlk/gamedata/equip/41601.png",
+            "basicDesc": "+1法力回复",
+            "desc": "携带者获得【比尔吉沃特】羁绊。",
+            "type": "转职纹章",
+            "synthesis": "金铲铲+女神之泪=比尔吉沃特纹章"
+        },
+        {
+            "name": "德玛西亚纹章",
+            "picture": "https://game.gtimg.cn/images/lol/act/jkzlk/gamedata/equip/41602.png",
+            "basicDesc": "+20护甲",
+            "desc": "携带者获得【德玛西亚】羁绊。",
+            "type": "转职纹章",
+            "synthesis": "金铲铲+锁子甲=德玛西亚纹章"
+        },
+        {
+            "name": "弗雷尔卓德纹章",
+            "picture": "https://game.gtimg.cn/images/lol/act/jkzlk/gamedata/equip/41603.png",
+            "basicDesc": "+150生命上限",
+            "desc": "携带者获得【弗雷尔卓德】羁绊。",
+            "type": "转职纹章",
+            "synthesis": "金铲铲+巨人腰带=弗雷尔卓德纹章"
+        },
+        {
+            "name": "艾欧尼亚纹章",
+            "picture": "https://game.gtimg.cn/images/lol/act/jkzlk/gamedata/equip/41604.png",
+            "basicDesc": "+10法术加成",
+            "desc": "携带者获得【艾欧尼亚】羁绊。",
+            "type": "转职纹章",
+            "synthesis": "金铲铲+无用大棒=艾欧尼亚纹章"
+        },
+        {
+            "name": "以绪塔尔纹章",
+            "picture": "https://game.gtimg.cn/images/lol/act/jkzlk/gamedata/equip/41605.png",
+            "basicDesc": "+150生命上限",
+            "desc": "携带者获得【以绪塔尔】羁绊。",
+            "type": "转职纹章"
+        },
+        {
+            "name": "诺克萨斯纹章",
+            "picture": "https://game.gtimg.cn/images/lol/act/jkzlk/gamedata/equip/41606.png",
+            "basicDesc": "+10物理加成",
+            "desc": "携带者获得【诺克萨斯】羁绊。",
+            "type": "转职纹章",
+            "synthesis": "金铲铲+暴风之剑=诺克萨斯纹章"
+        },
+        {
+            "name": "皮尔特沃夫纹章",
+            "picture": "https://game.gtimg.cn/images/lol/act/jkzlk/gamedata/equip/41607.png",
+            "basicDesc": "+150生命上限",
+            "desc": "携带者获得【皮尔特沃夫】羁绊。",
+            "type": "转职纹章"
+        },
+        {
+            "name": "虚空纹章",
+            "picture": "https://game.gtimg.cn/images/lol/act/jkzlk/gamedata/equip/41611.png",
+            "basicDesc": "+10%攻击速度",
+            "desc": "携带者获得【虚空】羁绊。",
+            "type": "转职纹章",
+            "synthesis": "金铲铲+反曲之弓=虚空纹章"
+        },
+        {
+            "name": "约德尔人纹章",
+            "picture": "https://game.gtimg.cn/images/lol/act/jkzlk/gamedata/equip/41612.png",
+            "basicDesc": "+20魔法抗性",
+            "desc": "携带者获得【约德尔人】羁绊。",
+            "type": "转职纹章",
+            "synthesis": "金铲铲+负极斗篷=约德尔人纹章"
+        },
+        {
+            "name": "祖安纹章",
+            "picture": "https://game.gtimg.cn/images/lol/act/jkzlk/gamedata/equip/41613.png",
+            "basicDesc": "+20%暴击率",
+            "desc": "携带者获得【祖安】羁绊。",
+            "type": "转职纹章",
+            "synthesis": "金铲铲+拳套=祖安纹章"
+        },
+        {
+            "name": "斗士纹章",
+            "picture": "https://game.gtimg.cn/images/lol/act/jkzlk/gamedata/equip/41614.png",
+            "basicDesc": "+150生命上限",
+            "desc": "携带者获得【斗士】羁绊。每一秒，在半径1格内造成携带者2%最大生命值的魔法伤害。",
+            "type": "转职纹章",
+            "synthesis": "金锅锅+巨人腰带=斗士纹章"
+        },
+        {
+            "name": "耀光使纹章",
+            "picture": "https://game.gtimg.cn/images/lol/act/jkzlk/gamedata/equip/41615.png",
+            "basicDesc": "+150生命上限",
+            "desc": "携带者获得【耀光使】羁绊。技能在3秒里持续造成30%额外魔法伤害。",
+            "type": "转职纹章"
+        },
+        {
+            "name": "护卫纹章",
+            "picture": "https://game.gtimg.cn/images/lol/act/jkzlk/gamedata/equip/41616.png",
+            "basicDesc": "+20护甲",
+            "desc": "携带者获得【护卫】羁绊。 战斗开始时：从所有来源处获得35%额外的护甲或魔抗，基于这二者哪个更高。",
+            "type": "转职纹章",
+            "synthesis": "金锅锅+锁子甲=护卫纹章"
+        },
+        {
+            "name": "枪手纹章",
+            "picture": "https://game.gtimg.cn/images/lol/act/jkzlk/gamedata/equip/41617.png",
+            "basicDesc": "+150生命上限",
+            "desc": "携带者获得【枪手】羁绊。 对一个敌人造成物理伤害时会使其护甲值降低2。",
+            "type": "转职纹章"
+        },
+        {
+            "name": "神谕者纹章",
+            "picture": "https://game.gtimg.cn/images/lol/act/jkzlk/gamedata/equip/41618.png",
+            "basicDesc": "+1法力回复",
+            "desc": "携带者获得【神谕者】羁绊。施放时，获得相当于20%法力值花费的法术加成。",
+            "type": "转职纹章",
+            "synthesis": "金锅锅+女神之泪=神谕者纹章"
+        },
+        {
+            "name": "主宰纹章",
+            "picture": "https://game.gtimg.cn/images/lol/act/jkzlk/gamedata/equip/41619.png",
+            "basicDesc": "+20魔法抗性",
+            "desc": "携带者获得【主宰】羁绊并在其他【主宰】阵亡时获得其10%最大生命值。",
+            "type": "转职纹章",
+            "synthesis": "金锅锅+负极斗篷=主宰纹章"
+        },
+        {
+            "name": "狙神纹章",
+            "picture": "https://game.gtimg.cn/images/lol/act/jkzlk/gamedata/equip/41620.png",
+            "basicDesc": "+150生命上限",
+            "desc": "携带者获得【狙神】羁绊并且+1攻击距离。",
+            "type": "转职纹章"
+        },
+        {
+            "name": "迅击战士纹章",
+            "picture": "https://game.gtimg.cn/images/lol/act/jkzlk/gamedata/equip/41621.png",
+            "basicDesc": "+10%攻击速度",
+            "desc": "携带者获得【迅击战士】羁绊。在参与击杀后，冲刺至相距最近的那个目标并治疗10%最大生命值。",
+            "type": "转职纹章",
+            "synthesis": "金锅锅+反曲之弓=迅击战士纹章"
+        },
+        {
+            "name": "裁决战士纹章",
+            "picture": "https://game.gtimg.cn/images/lol/act/jkzlk/gamedata/equip/41622.png",
+            "basicDesc": "+10物理加成",
+            "desc": "携带者获得【裁决战士】羁绊。在跌下25%最大生命值时，获得20法力值和15%最大生命值的护盾值。",
+            "type": "转职纹章",
+            "synthesis": "金锅锅+暴风之剑=裁决战士纹章"
+        },
+        {
+            "name": "法师纹章",
+            "picture": "https://game.gtimg.cn/images/lol/act/jkzlk/gamedata/equip/41623.png",
+            "basicDesc": "+10法术加成",
+            "desc": "携带者获得【法师】羁绊。在击杀时，返还携带者的15%最大法力值。",
+            "type": "转职纹章",
+            "synthesis": "金锅锅+无用大棒=法师纹章"
+        },
+        {
+            "name": "征服者纹章",
+            "picture": "https://game.gtimg.cn/images/lol/act/jkzlk/gamedata/equip/41624.png",
+            "basicDesc": "+20%暴击率",
+            "desc": "携带者获得【征服者】羁绊并且在暴击时有2%几率掉落1金币。  这局游戏生成的金币：0",
+            "type": "转职纹章",
+            "synthesis": "金锅锅+拳套=征服者纹章"
+        },
+        {
+            "name": "神盾使纹章",
+            "picture": "https://game.gtimg.cn/images/lol/act/jkzlk/gamedata/equip/41625.png",
+            "basicDesc": "+150生命上限",
+            "desc": "携带者获得【神盾使】羁绊。当携带者身上的护盾被打破时，治疗相当于该护盾30%初始护盾值的生命值。",
+            "type": "转职纹章"
+        }
+    ]
+}
