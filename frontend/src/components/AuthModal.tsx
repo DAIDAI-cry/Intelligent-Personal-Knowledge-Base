@@ -61,6 +61,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose, onSuccess
           localStorage.setItem("accessToken", data.access);
           localStorage.setItem("refreshToken", data.refresh);
           localStorage.setItem("isLoggedIn", "true");
+          localStorage.setItem("username", username);
           setIsLoggedIn(true);
           toast.success("登录成功");
           onSuccess();
