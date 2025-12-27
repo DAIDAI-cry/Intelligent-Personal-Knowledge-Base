@@ -66,8 +66,17 @@ export default function ChatInterface() {
   const [renamingId, setRenamingId] = useState<number | null>(null);
   const [newTitle, setNewTitle] = useState("");
 
+  const [username, setUsername] = useState("用户");
+
   const scrollAreaRef = useRef<HTMLDivElement>(null);
   const router = useRouter();
+
+  useEffect(() => {
+    const storedUsername = localStorage.getItem("username");
+    if (storedUsername) {
+      setUsername(storedUsername);
+    }
+  }, []);
 
   const handleRenameClick = (e: React.MouseEvent, conv: Conversation) => {
     e.stopPropagation();
@@ -384,7 +393,7 @@ export default function ChatInterface() {
                       <AvatarFallback><User size={16}/></AvatarFallback>
                   </Avatar>
                   <span className="text-sm font-medium text-gray-700 truncate max-w-[120px]">
-                      {typeof window !== 'undefined' ? localStorage.getItem("username") || "用户" : "用户"}
+                      {username}
                   </span>
               </div>
               <Button 

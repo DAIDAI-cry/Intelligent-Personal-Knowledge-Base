@@ -61,6 +61,7 @@ const LoginPage = () => {
         localStorage.setItem("accessToken", data.access);
         localStorage.setItem("refreshToken", data.refresh);
         localStorage.setItem("isLoggedIn", "true");
+        localStorage.setItem("username", formData.username);
 
         toast.success("登录成功")
         setIsLoggedIn(true);
