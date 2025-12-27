@@ -152,10 +152,12 @@ export default function ChatInterface() {
   const handleLogout = async () => {
     try {
       const token = localStorage.getItem("accessToken");
-      if (token) {
-        await axios.post("http://localhost:8000/logout/", {}, {
-          headers: { Authorization: `Bearer ${token}` }
-        });
+      const refreshToken = localStorage.getItem("refreshToken");
+      if (token && refreshToken) {
+        await axios.post("http://localhost:8000/logout/", 
+          { refresh: refreshToken },
+          { headers: { Authorization: `Bearer ${token}` } }
+        );
       }
     } catch (error) {
       console.error("Logout error:", error);
@@ -163,6 +165,7 @@ export default function ChatInterface() {
       localStorage.removeItem("accessToken");
       localStorage.removeItem("refreshToken");
       localStorage.removeItem("username");
+      localStorage.removeItem("isLoggedIn");
       toast.success("已退出登录");
       router.push("/login");
     }
