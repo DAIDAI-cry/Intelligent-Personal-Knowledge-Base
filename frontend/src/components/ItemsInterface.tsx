@@ -1,7 +1,7 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useRef, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import equipData from '../hexdata/equip_vectors.json';
-import { X, Table, Search } from 'lucide-react';
+import { X, Table, Search, ChevronDown, Filter } from 'lucide-react';
 import { Button } from "@/components/ui/button";
 
 interface Item {
@@ -18,7 +18,20 @@ const ItemsInterface: React.FC = () => {
   const [searchTerm, setSearchTerm] = useState<string>('');
   const [showSynthesis, setShowSynthesis] = useState(false);
   const [hoveredItem, setHoveredItem] = useState<Item | null>(null);
+  const [typeDropdownOpen, setTypeDropdownOpen] = useState(false);
+  const dropdownRef = useRef<HTMLDivElement>(null);
   const types = ['全部', '基础装备', '成型装备', '光明武器', '辅助装备', '神器装备', '转职纹章', '特殊装备'];
+
+  // 点击外部关闭下拉菜单
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
+        setTypeDropdownOpen(false);
+      }
+    };
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
 
   const basicItemsList = [
     "暴风之剑",
@@ -161,6 +174,55 @@ const ItemsInterface: React.FC = () => {
                 </button>
               )}
             </div>
+            
+            {/* 类型筛选下拉菜单 */}
+            <div className="relative" ref={dropdownRef}>
+              <button
+                onClick={() => setTypeDropdownOpen(!typeDropdownOpen)}
+                className={`flex items-center gap-2 px-4 py-2 border rounded-lg text-sm font-medium transition-all duration-200 ${
+                  filter !== '全部' 
+                    ? 'bg-blue-50 border-blue-200 text-blue-600' 
+                    : 'bg-white border-gray-200 text-gray-700 hover:bg-gray-50'
+                }`}
+              >
+                <Filter size={16} />
+                <span>{filter}</span>
+                <ChevronDown 
+                  size={16} 
+                  className={`transition-transform duration-200 ${typeDropdownOpen ? 'rotate-180' : ''}`} 
+                />
+              </button>
+              
+              <AnimatePresence>
+                {typeDropdownOpen && (
+                  <motion.div
+                    initial={{ opacity: 0, y: -10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: -10 }}
+                    transition={{ duration: 0.15 }}
+                    className="absolute right-0 top-full mt-2 w-40 bg-white border border-gray-200 rounded-lg shadow-lg z-50 overflow-hidden"
+                  >
+                    {types.map((t) => (
+                      <button
+                        key={t}
+                        onClick={() => {
+                          setFilter(t);
+                          setTypeDropdownOpen(false);
+                        }}
+                        className={`w-full px-4 py-2.5 text-left text-sm transition-colors ${
+                          filter === t 
+                            ? 'bg-blue-50 text-blue-600 font-medium' 
+                            : 'text-gray-700 hover:bg-gray-50'
+                        }`}
+                      >
+                        {t}
+                      </button>
+                    ))}
+                  </motion.div>
+                )}
+              </AnimatePresence>
+            </div>
+
             <Button 
                 variant="outline" 
                 onClick={() => setShowSynthesis(true)}
@@ -169,21 +231,6 @@ const ItemsInterface: React.FC = () => {
                 <Table size={16} />
                 合成表
             </Button>
-            <div className="flex space-x-2 bg-gray-100 p-1 rounded-lg overflow-x-auto">
-            {types.map((t) => (
-                <button
-                key={t}
-                onClick={() => setFilter(t)}
-                className={`px-4 py-2 rounded-md text-sm font-medium transition-all duration-200 whitespace-nowrap ${
-                    filter === t 
-                    ? 'bg-white text-blue-600 shadow-sm' 
-                    : 'text-gray-500 hover:text-gray-900 hover:bg-gray-200'
-                }`}
-                >
-                {t}
-                </button>
-            ))}
-            </div>
         </div>
       </div>
 
