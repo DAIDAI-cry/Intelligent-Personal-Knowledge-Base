@@ -1,7 +1,7 @@
 import React, { useState, useMemo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import equipData from '../hexdata/equip_vectors.json';
-import { X, Table } from 'lucide-react';
+import { X, Table, Search } from 'lucide-react';
 import { Button } from "@/components/ui/button";
 
 interface Item {
@@ -15,7 +15,9 @@ interface Item {
 
 const ItemsInterface: React.FC = () => {
   const [filter, setFilter] = useState<string>('全部');
-  const [showSynthesis, setShowSynthesis] = useState(false);  const [hoveredItem, setHoveredItem] = useState<Item | null>(null);
+  const [searchTerm, setSearchTerm] = useState<string>('');
+  const [showSynthesis, setShowSynthesis] = useState(false);
+  const [hoveredItem, setHoveredItem] = useState<Item | null>(null);
   const types = ['全部', '基础装备', '成型装备', '光明武器', '辅助装备', '神器装备', '转职纹章', '特殊装备'];
 
   const basicItemsList = [
@@ -36,6 +38,19 @@ const ItemsInterface: React.FC = () => {
   };
 
   const filteredItems = useMemo(() => {
+    let result = equipData.vectors as Item[];
+    
+    // 先按搜索词过滤
+    if (searchTerm.trim()) {
+      const term = searchTerm.toLowerCase().trim();
+      result = result.filter((item: Item) => 
+        item.name.toLowerCase().includes(term) || 
+        item.basicDesc?.toLowerCase().includes(term) ||
+        item.desc?.toLowerCase().includes(term)
+      );
+    }
+    
+    // 再按类型过滤
     if (filter === '全部') {
       const typeOrder: { [key: string]: number } = {
         '基础装备': 1,
@@ -46,12 +61,12 @@ const ItemsInterface: React.FC = () => {
         '转职纹章': 6,
         '特殊装备': 7
       };
-      return [...equipData.vectors].sort((a: Item, b: Item) => {
+      return [...result].sort((a: Item, b: Item) => {
         return (typeOrder[a.type] || 8) - (typeOrder[b.type] || 8);
       });
     }
-    return equipData.vectors.filter((item: Item) => item.type === filter);
-  }, [filter]);
+    return result.filter((item: Item) => item.type === filter);
+  }, [filter, searchTerm]);
 
   const synthesisMap = useMemo(() => {
     const map: { [key: string]: { [key: string]: Item } } = {};
@@ -127,6 +142,25 @@ const ItemsInterface: React.FC = () => {
           装备图鉴
         </h2>
         <div className="flex items-center gap-4">
+            {/* 搜索框 */}
+            <div className="relative">
+              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" size={18} />
+              <input
+                type="text"
+                placeholder="搜索装备名称或效果..."
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                className="pl-10 pr-10 py-2 w-64 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
+              />
+              {searchTerm && (
+                <button
+                  onClick={() => setSearchTerm('')}
+                  className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600"
+                >
+                  <X size={16} />
+                </button>
+              )}
+            </div>
             <Button 
                 variant="outline" 
                 onClick={() => setShowSynthesis(true)}
@@ -153,45 +187,60 @@ const ItemsInterface: React.FC = () => {
         </div>
       </div>
 
-      <div className="flex-1 overflow-y-auto pr-2 custom-scrollbar">
-        <div 
-          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4"
-        >
-            {filteredItems.map((item: Item, index: number) => (
-              <motion.div
-                layout
-                initial={{ opacity: 0, scale: 0.9 }}
-                animate={{ opacity: 1, scale: 1 }}
-                transition={{ duration: 0.2 }}
-                key={`${item.name}-${index}`}
-                className={`relative group rounded-xl border p-4 cursor-pointer overflow-hidden transition-all duration-300 hover:shadow-md ${getTypeColor(item.type)}`}
-              >
-                <div className="flex items-center space-x-4 mb-3">
-                  <div className="relative w-12 h-12 rounded-lg overflow-hidden bg-gray-100 flex-shrink-0 border border-gray-100">
-                    <img 
-                      src={item.picture} 
-                      alt={item.name} 
-                      className="w-full h-full object-cover"
-                      onError={(e) => {
-                        (e.target as HTMLImageElement).src = 'https://via.placeholder.com/48?text=Item';
-                      }}
-                    />
-                  </div>
-                  <div className="flex-1 min-w-0">
-                    <h3 className="font-bold text-lg truncate">{item.name}</h3>
-                    <span className={`text-xs px-2 py-0.5 rounded-full font-bold ${getTypeBadgeColor(item.type)}`}>
-                      {item.type}
-                    </span>
-                  </div>
-                </div>
-                
-                <div className="text-sm opacity-90 leading-relaxed mb-2">
-                    <p className="font-semibold text-xs mb-1 opacity-70">{item.basicDesc}</p>
-                    <p className="line-clamp-3 group-hover:line-clamp-none transition-all duration-300">{item.desc}</p>
-                </div>
-              </motion.div>
-            ))}
+      {/* 搜索结果统计 */}
+      {searchTerm && (
+        <div className="mb-4 text-sm text-gray-500">
+          找到 <span className="font-semibold text-blue-600">{filteredItems.length}</span> 个匹配的装备
         </div>
+      )}
+
+      <div className="flex-1 overflow-y-auto pr-2 custom-scrollbar">
+        {filteredItems.length === 0 ? (
+          <div className="flex flex-col items-center justify-center h-64 text-gray-400">
+            <Search size={48} className="mb-4 opacity-50" />
+            <p className="text-lg font-medium">没有找到匹配的装备</p>
+            <p className="text-sm mt-2">尝试使用其他关键词搜索</p>
+          </div>
+        ) : (
+          <div 
+            className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4"
+          >
+              {filteredItems.map((item: Item, index: number) => (
+                <motion.div
+                  layout
+                  initial={{ opacity: 0, scale: 0.9 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  transition={{ duration: 0.2 }}
+                  key={`${item.name}-${index}`}
+                  className={`relative group rounded-xl border p-4 cursor-pointer overflow-hidden transition-all duration-300 hover:shadow-md ${getTypeColor(item.type)}`}
+                >
+                  <div className="flex items-center space-x-4 mb-3">
+                    <div className="relative w-12 h-12 rounded-lg overflow-hidden bg-gray-100 flex-shrink-0 border border-gray-100">
+                      <img 
+                        src={item.picture} 
+                        alt={item.name} 
+                        className="w-full h-full object-cover"
+                        onError={(e) => {
+                          (e.target as HTMLImageElement).src = 'https://via.placeholder.com/48?text=Item';
+                        }}
+                      />
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <h3 className="font-bold text-lg truncate">{item.name}</h3>
+                      <span className={`text-xs px-2 py-0.5 rounded-full font-bold ${getTypeBadgeColor(item.type)}`}>
+                        {item.type}
+                      </span>
+                    </div>
+                  </div>
+                  
+                  <div className="text-sm opacity-90 leading-relaxed mb-2">
+                      <p className="font-semibold text-xs mb-1 opacity-70">{item.basicDesc}</p>
+                      <p className="line-clamp-3 group-hover:line-clamp-none transition-all duration-300">{item.desc}</p>
+                  </div>
+                </motion.div>
+              ))}
+          </div>
+        )}
       </div>
 
       {/* Synthesis Table Modal */}
