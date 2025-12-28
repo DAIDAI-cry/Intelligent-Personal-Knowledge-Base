@@ -41,7 +41,11 @@ export default function Page() {
   }, []);
 
   const handleEnter = () => {
-    setShowLoginModal(true);
+    if (isLoggedIn) {
+      setShowIntro(false); // 已登录直接进入
+    } else {
+      setShowLoginModal(true);
+    }
   };
 
   const handleAuthSuccess = () => {

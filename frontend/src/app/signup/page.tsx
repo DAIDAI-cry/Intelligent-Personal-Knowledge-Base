@@ -23,7 +23,7 @@ const SignupPage = () => {
   };
 
   // Handle form submission
-  const handleSubmit = async (e:React.FocusEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
     const { username, password, confirmPassword } = formData;

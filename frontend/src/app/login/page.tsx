@@ -38,6 +38,7 @@ const LoginPage = () => {
 
     if (!username || !password) {
       toast.error("请填写所有字段");
+      return; // 添加return阻止继续执行
     }
 
     try { 

@@ -31,7 +31,7 @@ class ConversationListCreateView(generics.ListCreateAPIView):
     def perform_create(self, serializer):
         serializer.save(user=self.request.user)
 
-class ConversationDetailView(generics.RetrieveDestroyAPIView):
+class ConversationDetailView(generics.RetrieveUpdateDestroyAPIView):
     serializer_class = ConversationSerializer
     permission_classes = [permissions.IsAuthenticated]
     lookup_field = 'id'
