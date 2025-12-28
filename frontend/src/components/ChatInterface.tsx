@@ -37,6 +37,7 @@ import {
   DialogTitle,
   DialogFooter,
 } from "@/components/ui/dialog";
+import { API_BASE, API_ENDPOINTS } from "@/lib/api";
 
 interface Message {
   id: string;
@@ -90,7 +91,7 @@ export default function ChatInterface() {
     if (!renamingId || !newTitle.trim()) return;
     
     try {
-      await axios.patch(`http://localhost:8000/conversations/${renamingId}/`, 
+      await axios.patch(`${API_ENDPOINTS.conversations}${renamingId}/`, 
         { title: newTitle.trim() },
         { headers: getAuthHeaders() }
       );
@@ -112,7 +113,7 @@ export default function ChatInterface() {
     
     const newMarkedStatus = !conv.is_marked;
     try {
-      await axios.patch(`http://localhost:8000/conversations/${id}/`, 
+      await axios.patch(`${API_ENDPOINTS.conversations}${id}/`, 
         { is_marked: newMarkedStatus },
         { headers: getAuthHeaders() }
       );
@@ -133,7 +134,7 @@ export default function ChatInterface() {
 
   const fetchConversations = async () => {
     try {
-      const response = await axios.get("http://localhost:8000/conversations/", {
+      const response = await axios.get(API_ENDPOINTS.conversations, {
         headers: getAuthHeaders(),
       });
       setConversations(response.data);
@@ -144,7 +145,7 @@ export default function ChatInterface() {
 
   const loadConversation = async (id: number) => {
     try {
-      const response = await axios.get(`http://localhost:8000/conversations/${id}/messages/`, {
+      const response = await axios.get(`${API_ENDPOINTS.conversations}${id}/messages/`, {
         headers: getAuthHeaders(),
       });
       setMessages(response.data);
@@ -160,7 +161,7 @@ export default function ChatInterface() {
     if (!confirm("确定要删除这个对话吗？")) return;
 
     try {
-      await axios.delete(`http://localhost:8000/conversations/${id}/`, {
+      await axios.delete(`${API_ENDPOINTS.conversations}${id}/`, {
         headers: getAuthHeaders(),
       });
       
@@ -183,7 +184,7 @@ export default function ChatInterface() {
       const token = localStorage.getItem("accessToken");
       const refreshToken = localStorage.getItem("refreshToken");
       if (token && refreshToken) {
-        await axios.post("http://localhost:8000/logout/", 
+        await axios.post(API_ENDPOINTS.logout, 
           { refresh: refreshToken },
           { headers: { Authorization: `Bearer ${token}` } }
         );
@@ -224,7 +225,7 @@ export default function ChatInterface() {
 
     try {
       const response = await axios.post(
-        "http://localhost:8000/ask_ai/",
+        API_ENDPOINTS.askAi,
         {
           query: userMessage.content,
           conversation_id: conversationId,

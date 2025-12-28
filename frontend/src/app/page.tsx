@@ -9,6 +9,7 @@ import axios from "axios";
 import { toast } from "sonner";
 import { motion } from "framer-motion";
 import { AuthModal } from "@/components/AuthModal";
+import { API_ENDPOINTS } from "@/lib/api";
 
 import ChatInterface from "@/components/ChatInterface";
 
@@ -56,7 +57,7 @@ export default function Page() {
   const handleUpload = async (data:FormData) => {
     try {
       const token = localStorage.getItem("accessToken");
-      const response = await axios.post(`http://localhost:8000/add_pdf/`, data, {
+      const response = await axios.post(API_ENDPOINTS.addPdf, data, {
         headers: {
           "Content-Type": "multipart/form-data",
           "Authorization": `Bearer ${token}`,

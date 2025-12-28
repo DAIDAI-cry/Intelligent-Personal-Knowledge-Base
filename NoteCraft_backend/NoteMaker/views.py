@@ -10,12 +10,16 @@ from django.views.decorators.csrf import csrf_exempt
 from django.utils.decorators import method_decorator
 from rest_framework import status, generics, permissions
 import json
+import logging
+from urllib.parse import urlparse
 from .tasks import generate_notes_task
 from celery.result import AsyncResult
 from NoteCraft_backend.celery import app
 from .ai_module import query_ai
 from .models import Conversation, Message
 from .serializers import ConversationSerializer, MessageSerializer
+
+logger = logging.getLogger(__name__)
 
 class HelloWorldView(APIView):
     def get(self, request:Request)->Response:
@@ -88,9 +92,10 @@ class AskAIView(APIView):
             }
             return Response(response_data)
         except Exception as e:
-            # Even if AI fails, return the conversation_id so the frontend can update the list
+            # 记录详细错误到日志，返回通用错误信息给前端
+            logger.error(f"AI Query Error: {e}")
             return Response({
-                "error": str(e),
+                "error": "AI服务暂时不可用",
                 "conversation_id": conversation.id,
                 "answer": "抱歉，我现在无法连接到大脑，请稍后再试。"
             }, status=500)
@@ -141,15 +146,27 @@ class ModifyImageView(APIView):
 
 @method_decorator(csrf_exempt, name='dispatch')
 class ProxyImageView(APIView):
+    # URL白名单，只允许这些域名的图片代理
+    ALLOWED_DOMAINS = ['game.gtimg.cn', 'cloudinary.com', 'res.cloudinary.com', 'lolstatic-a.akamaihd.net']
+    
     def get(self, request, *args, **kwargs):
         # Get the image URL from the query parameters
         image_url = request.query_params.get('url', None)
         if not image_url:
             return Response({"error": "Image URL is required"}, status=status.HTTP_400_BAD_REQUEST)
 
+        # URL白名单验证，防止SSRF攻击
+        try:
+            parsed = urlparse(image_url)
+            if not any(domain in parsed.netloc for domain in self.ALLOWED_DOMAINS):
+                logger.warning(f"Blocked proxy request for unauthorized domain: {parsed.netloc}")
+                return Response({"error": "URL not allowed"}, status=status.HTTP_403_FORBIDDEN)
+        except Exception:
+            return Response({"error": "Invalid URL"}, status=status.HTTP_400_BAD_REQUEST)
+
         try:
             # Fetch the image from the external URL
-            response = requests.get(image_url, stream=True)
+            response = requests.get(image_url, stream=True, timeout=10)
             response.raise_for_status()
 
             # Set CORS headers
@@ -162,7 +179,8 @@ class ProxyImageView(APIView):
             return http_response
 
         except requests.RequestException as e:
-            return Response({"error": f"Failed to fetch image: {str(e)}"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+            logger.error(f"Failed to fetch image: {e}")
+            return Response({"error": "Failed to fetch image"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 # 修改
 
