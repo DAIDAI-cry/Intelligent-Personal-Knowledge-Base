@@ -66,8 +66,17 @@ export default function ChatInterface() {
   const [renamingId, setRenamingId] = useState<number | null>(null);
   const [newTitle, setNewTitle] = useState("");
 
+  const [username, setUsername] = useState("用户");
+
   const scrollAreaRef = useRef<HTMLDivElement>(null);
   const router = useRouter();
+
+  useEffect(() => {
+    const storedUsername = localStorage.getItem("username");
+    if (storedUsername) {
+      setUsername(storedUsername);
+    }
+  }, []);
 
   const handleRenameClick = (e: React.MouseEvent, conv: Conversation) => {
     e.stopPropagation();
@@ -152,10 +161,12 @@ export default function ChatInterface() {
   const handleLogout = async () => {
     try {
       const token = localStorage.getItem("accessToken");
-      if (token) {
-        await axios.post("http://localhost:8000/logout/", {}, {
-          headers: { Authorization: `Bearer ${token}` }
-        });
+      const refreshToken = localStorage.getItem("refreshToken");
+      if (token && refreshToken) {
+        await axios.post("http://localhost:8000/logout/", 
+          { refresh: refreshToken },
+          { headers: { Authorization: `Bearer ${token}` } }
+        );
       }
     } catch (error) {
       console.error("Logout error:", error);
@@ -163,6 +174,7 @@ export default function ChatInterface() {
       localStorage.removeItem("accessToken");
       localStorage.removeItem("refreshToken");
       localStorage.removeItem("username");
+      localStorage.removeItem("isLoggedIn");
       toast.success("已退出登录");
       router.push("/login");
     }
@@ -381,7 +393,7 @@ export default function ChatInterface() {
                       <AvatarFallback><User size={16}/></AvatarFallback>
                   </Avatar>
                   <span className="text-sm font-medium text-gray-700 truncate max-w-[120px]">
-                      {typeof window !== 'undefined' ? localStorage.getItem("username") || "用户" : "用户"}
+                      {username}
                   </span>
               </div>
               <Button 

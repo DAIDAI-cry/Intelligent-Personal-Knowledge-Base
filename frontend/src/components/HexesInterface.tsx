@@ -1,5 +1,6 @@
 import React, { useState, useMemo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { Search, X } from 'lucide-react';
 import hexData from '../hexdata/hexes.json';
 
 interface Hex {
@@ -11,18 +12,31 @@ interface Hex {
 
 const HexesInterface: React.FC = () => {
   const [filter, setFilter] = useState<string>('全部');
+  const [searchTerm, setSearchTerm] = useState<string>('');
 
   const qualities = ['全部', '白银', '黄金', '棱彩'];
 
   const filteredHexes = useMemo(() => {
+    let result = hexData.vectors as Hex[];
+    
+    // 先按搜索词过滤
+    if (searchTerm.trim()) {
+      const term = searchTerm.toLowerCase().trim();
+      result = result.filter((hex: Hex) => 
+        hex.name.toLowerCase().includes(term) || 
+        hex.effect.toLowerCase().includes(term)
+      );
+    }
+    
+    // 再按品质过滤
     if (filter === '全部') {
       const qualityOrder: { [key: string]: number } = { '白银': 1, '黄金': 2, '棱彩': 3 };
-      return [...hexData.vectors].sort((a: Hex, b: Hex) => {
+      return [...result].sort((a: Hex, b: Hex) => {
         return (qualityOrder[a.quality] || 4) - (qualityOrder[b.quality] || 4);
       });
     }
-    return hexData.vectors.filter((hex: Hex) => hex.quality === filter);
-  }, [filter]);
+    return result.filter((hex: Hex) => hex.quality === filter);
+  }, [filter, searchTerm]);
 
   const getQualityColor = (quality: string) => {
     switch (quality) {
@@ -48,27 +62,63 @@ const HexesInterface: React.FC = () => {
         <h2 className="text-3xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-blue-600 to-purple-600">
           海克斯科技强化
         </h2>
-        <div className="flex space-x-2 bg-gray-100 p-1 rounded-lg">
-          {qualities.map((q) => (
-            <button
-              key={q}
-              onClick={() => setFilter(q)}
-              className={`px-4 py-2 rounded-md text-sm font-medium transition-all duration-200 ${
-                filter === q 
-                  ? 'bg-white text-blue-600 shadow-sm' 
-                  : 'text-gray-500 hover:text-gray-900 hover:bg-gray-200'
-              }`}
-            >
-              {q}
-            </button>
-          ))}
+        <div className="flex items-center gap-4">
+          {/* 搜索框 */}
+          <div className="relative">
+            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" size={18} />
+            <input
+              type="text"
+              placeholder="搜索海克斯名称或效果..."
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              className="pl-10 pr-10 py-2 w-64 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
+            />
+            {searchTerm && (
+              <button
+                onClick={() => setSearchTerm('')}
+                className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600"
+              >
+                <X size={16} />
+              </button>
+            )}
+          </div>
+          {/* 品质筛选 */}
+          <div className="flex space-x-2 bg-gray-100 p-1 rounded-lg">
+            {qualities.map((q) => (
+              <button
+                key={q}
+                onClick={() => setFilter(q)}
+                className={`px-4 py-2 rounded-md text-sm font-medium transition-all duration-200 ${
+                  filter === q 
+                    ? 'bg-white text-blue-600 shadow-sm' 
+                    : 'text-gray-500 hover:text-gray-900 hover:bg-gray-200'
+                }`}
+              >
+                {q}
+              </button>
+            ))}
+          </div>
         </div>
       </div>
 
+      {/* 搜索结果统计 */}
+      {searchTerm && (
+        <div className="mb-4 text-sm text-gray-500">
+          找到 <span className="font-semibold text-blue-600">{filteredHexes.length}</span> 个匹配的海克斯
+        </div>
+      )}
+
       <div className="flex-1 overflow-y-auto pr-2 custom-scrollbar">
-        <div 
-          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4"
-        >
+        {filteredHexes.length === 0 ? (
+          <div className="flex flex-col items-center justify-center h-64 text-gray-400">
+            <Search size={48} className="mb-4 opacity-50" />
+            <p className="text-lg font-medium">没有找到匹配的海克斯</p>
+            <p className="text-sm mt-2">尝试使用其他关键词搜索</p>
+          </div>
+        ) : (
+          <div 
+            className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4"
+          >
             {filteredHexes.map((hex: Hex, index: number) => (
               <motion.div
                 layout
@@ -105,7 +155,8 @@ const HexesInterface: React.FC = () => {
                 <div className="absolute inset-0 bg-gradient-to-br from-black/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none" />
               </motion.div>
             ))}
-        </div>
+          </div>
+        )}
       </div>
     </div>
   );

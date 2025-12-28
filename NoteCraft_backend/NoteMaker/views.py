@@ -169,5 +169,7 @@ class ProxyImageView(APIView):
 class CancelTaskView(APIView):
     def post(self, request: Request):
         task_id = request.data.get("task_id")  # type: ignore
+        if not task_id:
+            return Response({"error": "Missing task_id"}, status=400)
         app.control.revoke(task_id, terminate=True)  
-        return Response({"error": "Missing task_id"}, status=400)
+        return Response({"message": "Task cancelled successfully"}, status=200)
