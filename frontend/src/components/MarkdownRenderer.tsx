@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import ReactMarkdown from 'react-markdown';
 import remarkMath from 'remark-math';
 import rehypeKatex from 'rehype-katex';
@@ -7,6 +7,48 @@ import 'katex/dist/katex.min.css';
 
 interface MarkdownRendererProps {
   content: string;
+}
+
+interface CodeBlockProps {
+  className?: string;
+  children: React.ReactNode;
+}
+
+// 独立的代码块组件，避免在回调函数中使用 Hooks
+function CodeBlock({ className, children }: CodeBlockProps) {
+  const [isCopied, setIsCopied] = useState(false);
+  const match = /language-(\w+)/.exec(className || '');
+  const codeContent = String(children).replace(/\n$/, '');
+
+  const handleCopy = () => {
+    navigator.clipboard.writeText(codeContent);
+    setIsCopied(true);
+    setTimeout(() => setIsCopied(false), 2000);
+  };
+
+  if (match) {
+    return (
+      <div className="relative group rounded-md my-4 overflow-hidden border border-gray-200 bg-gray-50">
+        <div className="flex items-center justify-between px-4 py-2 bg-gray-100 border-b border-gray-200">
+          <span className="text-xs font-medium text-gray-600">{match[1]}</span>
+          <button
+            onClick={handleCopy}
+            className="p-1 hover:bg-gray-200 rounded transition-colors"
+            title="Copy code"
+          >
+            {isCopied ? <Check size={14} className="text-green-600" /> : <Copy size={14} className="text-gray-500" />}
+          </button>
+        </div>
+        <div className="p-4 overflow-x-auto">
+          <code className={className}>
+            {children}
+          </code>
+        </div>
+      </div>
+    );
+  }
+
+  return null;
 }
 
 export function MarkdownRenderer({ content }: MarkdownRendererProps) {
@@ -18,35 +60,9 @@ export function MarkdownRenderer({ content }: MarkdownRendererProps) {
         components={{
         code({ node, inline, className, children, ...props }: any) {
           const match = /language-(\w+)/.exec(className || '');
-          const [isCopied, setIsCopied] = React.useState(false);
-          const codeContent = String(children).replace(/\n$/, '');
-
-          const handleCopy = () => {
-            navigator.clipboard.writeText(codeContent);
-            setIsCopied(true);
-            setTimeout(() => setIsCopied(false), 2000);
-          };
 
           if (!inline && match) {
-            return (
-              <div className="relative group rounded-md my-4 overflow-hidden border border-gray-200 bg-gray-50">
-                <div className="flex items-center justify-between px-4 py-2 bg-gray-100 border-b border-gray-200">
-                  <span className="text-xs font-medium text-gray-600">{match[1]}</span>
-                  <button
-                    onClick={handleCopy}
-                    className="p-1 hover:bg-gray-200 rounded transition-colors"
-                    title="Copy code"
-                  >
-                    {isCopied ? <Check size={14} className="text-green-600" /> : <Copy size={14} className="text-gray-500" />}
-                  </button>
-                </div>
-                <div className="p-4 overflow-x-auto">
-                  <code className={className} {...props}>
-                    {children}
-                  </code>
-                </div>
-              </div>
-            );
+            return <CodeBlock className={className}>{children}</CodeBlock>;
           }
 
           return (

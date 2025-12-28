@@ -6,6 +6,7 @@ import { useRouter } from "next/navigation";
 import { AuthContext } from "../contexts/AuthContext";
 import axios from "axios";
 import { toast} from "sonner";
+import { API_ENDPOINTS } from "@/lib/api";
 const LoginPage = () => {
   const { isLoggedIn,setIsLoggedIn } = useContext(AuthContext);
   const [formData, setFormData] = useState({
@@ -38,11 +39,12 @@ const LoginPage = () => {
 
     if (!username || !password) {
       toast.error("请填写所有字段");
+      return; // 添加return阻止继续执行
     }
 
     try { 
       const response = await axios.post(
-        `http://localhost:8000/api/login/`, //peropero's change
+        API_ENDPOINTS.login,
         {
           username,
           password,

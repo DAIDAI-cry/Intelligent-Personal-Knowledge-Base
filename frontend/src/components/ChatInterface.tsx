@@ -37,6 +37,7 @@ import {
   DialogTitle,
   DialogFooter,
 } from "@/components/ui/dialog";
+import { API_BASE, API_ENDPOINTS } from "@/lib/api";
 
 interface Message {
   id: string;
@@ -48,7 +49,7 @@ interface Conversation {
   id: number;
   title: string;
   created_at: string;
-  isMarked?: boolean;
+  is_marked?: boolean;
 }
 
 export default function ChatInterface() {
@@ -86,23 +87,43 @@ export default function ChatInterface() {
     setActiveMenuId(null);
   };
 
-  const handleRenameSubmit = () => {
+  const handleRenameSubmit = async () => {
     if (!renamingId || !newTitle.trim()) return;
     
-    setConversations(prev => prev.map(c => 
-      c.id === renamingId ? { ...c, title: newTitle.trim() } : c
-    ));
-    // TODO: Call API to update title on backend
+    try {
+      await axios.patch(`${API_ENDPOINTS.conversations}${renamingId}/`, 
+        { title: newTitle.trim() },
+        { headers: getAuthHeaders() }
+      );
+      setConversations(prev => prev.map(c => 
+        c.id === renamingId ? { ...c, title: newTitle.trim() } : c
+      ));
+      toast.success("重命名成功");
+    } catch (error) {
+      toast.error("重命名失败");
+    }
     setRenameDialogOpen(false);
     setRenamingId(null);
-    toast.success("重命名成功");
   };
 
-  const handleMarkClick = (e: React.MouseEvent, id: number) => {
+  const handleMarkClick = async (e: React.MouseEvent, id: number) => {
     e.stopPropagation();
-    setConversations(prev => prev.map(c => 
-      c.id === id ? { ...c, isMarked: !c.isMarked } : c
-    ));
+    const conv = conversations.find(c => c.id === id);
+    if (!conv) return;
+    
+    const newMarkedStatus = !conv.is_marked;
+    try {
+      await axios.patch(`${API_ENDPOINTS.conversations}${id}/`, 
+        { is_marked: newMarkedStatus },
+        { headers: getAuthHeaders() }
+      );
+      setConversations(prev => prev.map(c => 
+        c.id === id ? { ...c, is_marked: newMarkedStatus } : c
+      ));
+      toast.success(newMarkedStatus ? "已标记" : "已取消标记");
+    } catch (error) {
+      toast.error("操作失败");
+    }
     setActiveMenuId(null);
   };
 
@@ -113,7 +134,7 @@ export default function ChatInterface() {
 
   const fetchConversations = async () => {
     try {
-      const response = await axios.get("http://localhost:8000/conversations/", {
+      const response = await axios.get(API_ENDPOINTS.conversations, {
         headers: getAuthHeaders(),
       });
       setConversations(response.data);
@@ -124,7 +145,7 @@ export default function ChatInterface() {
 
   const loadConversation = async (id: number) => {
     try {
-      const response = await axios.get(`http://localhost:8000/conversations/${id}/messages/`, {
+      const response = await axios.get(`${API_ENDPOINTS.conversations}${id}/messages/`, {
         headers: getAuthHeaders(),
       });
       setMessages(response.data);
@@ -140,7 +161,7 @@ export default function ChatInterface() {
     if (!confirm("确定要删除这个对话吗？")) return;
 
     try {
-      await axios.delete(`http://localhost:8000/conversations/${id}/`, {
+      await axios.delete(`${API_ENDPOINTS.conversations}${id}/`, {
         headers: getAuthHeaders(),
       });
       
@@ -163,7 +184,7 @@ export default function ChatInterface() {
       const token = localStorage.getItem("accessToken");
       const refreshToken = localStorage.getItem("refreshToken");
       if (token && refreshToken) {
-        await axios.post("http://localhost:8000/logout/", 
+        await axios.post(API_ENDPOINTS.logout, 
           { refresh: refreshToken },
           { headers: { Authorization: `Bearer ${token}` } }
         );
@@ -204,7 +225,7 @@ export default function ChatInterface() {
 
     try {
       const response = await axios.post(
-        "http://localhost:8000/ask_ai/",
+        API_ENDPOINTS.askAi,
         {
           query: userMessage.content,
           conversation_id: conversationId,
@@ -335,7 +356,7 @@ export default function ChatInterface() {
                 }`}
               >
                 <div className="flex items-center gap-2 overflow-hidden">
-                  {conv.isMarked ? <Pin size={14} className="shrink-0 text-blue-500 fill-blue-500" /> : <MessageSquare size={14} className="shrink-0"/>}
+                  {conv.is_marked ? <Pin size={14} className="shrink-0 text-blue-500 fill-blue-500" /> : <MessageSquare size={14} className="shrink-0"/>}
                   <span className="truncate">{conv.title}</span>
                 </div>
                 
@@ -362,7 +383,7 @@ export default function ChatInterface() {
                             className="px-3 py-2 text-left text-xs hover:bg-gray-100 flex items-center gap-2"
                             onClick={(e) => handleMarkClick(e, conv.id)}
                         >
-                            <Pin size={12} /> {conv.isMarked ? "取消标记" : "标记"}
+                            <Pin size={12} /> {conv.is_marked ? "取消标记" : "标记"}
                         </button>
                         <button 
                             className="px-3 py-2 text-left text-xs hover:bg-gray-100 flex items-center gap-2"

@@ -178,7 +178,7 @@ def query_ai(query: str):
                 # Search Pinecone
                 results = index.query(
                     vector=query_embedding,
-                    top_k=1000, # Increased to 20 to capture lists of items (e.g. "all 5 cost units")
+                    top_k=100, # 降低到合理值，避免响应缓慢和Token消耗过大
                     include_metadata=True
                 )
                 

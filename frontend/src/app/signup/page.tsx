@@ -4,6 +4,7 @@ import "../login/styles.css"; // Ensure this CSS file exists in the correct path
 import Link from "next/link";
 import axios from "axios";
 import { toast } from "sonner";
+import { API_ENDPOINTS } from "@/lib/api";
 
 const SignupPage = () => {
 
@@ -23,7 +24,7 @@ const SignupPage = () => {
   };
 
   // Handle form submission
-  const handleSubmit = async (e:React.FocusEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
     const { username, password, confirmPassword } = formData;
@@ -36,7 +37,7 @@ const SignupPage = () => {
 
     try {
       const response = await axios.post(
-        `http://localhost:8000/api/signup/`, //peropero's change
+        API_ENDPOINTS.signup,
         {
           username,
           password,
